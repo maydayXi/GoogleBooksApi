@@ -39,6 +39,20 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.0 
+
+Support title search and improve book search UI
+- Add `BookSearchCriteria` enum for ISBN and title search
+- Add `_FetchBooksByTitle` action to return multiple books
+- Add `IsbnExtension` for ISBN validation and formatting
+- Move shared view models such as `DropdownItemVm` to Components
+- Add `_BookCard` partial view for reusable book card layout
+- Support switching search criteria from the frontend dropdown
+- Fix typo in `isbnValidator.js`
+- Improve navbar styling and dropdown selected state
+
+Release date: 2026-05-03
+
 ### 1.1.0
 
 Recactor book search flow to use backend Partial View with AJAX loading.

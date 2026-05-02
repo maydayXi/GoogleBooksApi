@@ -166,6 +166,11 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     {
         List<VersionItemVm> versions = [
             new() {
+                Version = "1.2.0",
+                Description = "Support title search and improve book search UI.",
+                ReleasedDate = new DateOnly(2026, 5, 3)
+            },
+            new() {
                 Version = "1.1.0",
                 Description = "Recactor book search flow to use backend Partial View with AJAX loading.",
                 ReleasedDate = new DateOnly(2026, 5, 2)
