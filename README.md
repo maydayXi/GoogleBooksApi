@@ -39,6 +39,17 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.1.0
+
+Recactor book search flow to use backend Partial View with AJAX loading.
+- Added `BookVm` and `ApiResponse` for standardized data structure.
+- Extended `WebHelper` with ISBN parsing utility.
+- Updated book-search.js: removed frontend card component, improved error handling.
+- Split CSS into individual .cshtml.css files for modularity and style isolation.
+- Remove googleBooksApi.js to simplify frontend dependencies.
+
+Release date: 2026-05-02
+
 ### 1.0.0
 
 Initail release - Support searching book information by ISBN
