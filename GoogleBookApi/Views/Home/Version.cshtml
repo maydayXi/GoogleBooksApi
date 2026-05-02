@@ -1,0 +1,41 @@
+﻿@using GoogleBookApi.Controllers
+@using GoogleBookApi.ViewModels
+
+@model IEnumerable<VersionItemVm>
+
+@{
+    ViewData["Title"] = nameof(HomeController.Version);
+}
+
+@section Headers {
+    <link rel="stylesheet" href="~/css/version.css" asp-append-version="true" />
+}
+
+<div class="row justify-content-center align-items-center" id="version">
+    <div class="card shadow my-3 px-0">
+        <div class="card-header bg-secondary fw-bolder">
+            <i class="bi bi-git me-2"></i>
+            VERSION INFO
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                @foreach (VersionItemVm versionItem in Model)
+                {
+                    <li class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-0 text-secondary-emphasis fw-bold">
+                                @versionItem.Version
+                            </h5>
+                            <small class="badge rounded-pill text-bg-success align-self-baseline shadow-sm">
+                                @versionItem.ReleasedDate.ToString("yyyy-MM-dd")
+                            </small>
+                        </div>
+                        <p class="mt-2 version-description text-secondary">
+                            @versionItem.Description
+                        </p>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

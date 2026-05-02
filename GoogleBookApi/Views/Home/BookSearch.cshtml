@@ -1,0 +1,80 @@
+﻿@using GoogleBookApi.Controllers
+@using GoogleBookApi.ViewModels
+
+@{
+    ViewData["Title"] = nameof(HomeController.BookSearch);
+    // 9865026864
+
+    IEnumerable<DropdownItemVm> dropdownItems = [
+        new() {
+            DisplayText = "ISBN",
+            Icon = "bi bi-upc"
+        },
+        // new() {
+        //     DisplayText = "Title",
+        //     Icon = "bi bi-journal-text"
+        // }
+    ];
+}
+
+@section Headers {
+    <link rel="stylesheet" href="~/css/book-search.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
+}
+
+<div class="row justify-content-center align-items-center">
+    <div id="book-search" class="card shadow border-0 rounded rounded-3 mb-4 mt-3">
+        <div class="input-group my-3 shadow-sm">
+            <button id="btn-search-by" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i id="search-by-icon" class="bi bi-upc me-2"></i>
+                <span>ISBN</span>
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (DropdownItemVm dropdownItem in dropdownItems)
+                {
+                    <li>
+                        <dropdonw-item icon="@dropdownItem.Icon" aria-label="@dropdownItem.DisplayText">
+                            @dropdownItem.DisplayText
+                        </dropdonw-item>
+                    </li>
+                }
+            </ul>
+            <input type="text" id="book-search-criteria" class="form-control border-0" aria-label="Book Search Criteria" />
+        </div>
+    </div>
+
+    <div id="book-search-result" class="card shadow col-md-6 border-0 d-none pt-2 mb-3" aria-label="Book Search Result">
+        <div id="book-image" class="d-inline-block" aria-label="Book Cover"></div>
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3" id="book-title"></h5>
+            <h6 class="card-subtitle fw-bold text-muted mb-3" id="book-subtitle">
+                <i class="bi bi-people-fill me-2"></i>
+                <span></span>
+            </h6>
+            <div class="card-text text-secondary mb-2" id="book-description"></div>
+            <ul class="list-unstyled">
+                <li class="fw-bold">
+                    <i class="bi bi-upc fs-5"></i>10：<span id="isbn-10"></span>
+                </li>
+                <li class="fw-bold">
+                    <i class="bi bi-upc fs-5"></i>13：<span id="isbn-13"></span>
+                </li>
+            </ul>
+            <div class="card-text border-top mt-3 pt-3 border-secondary-subtle border-2">
+                <div class="row justify-content-between">
+                    <div id="published-date" class="col-6 text-body-secondary">
+                        <i class="bi bi-calendar"></i>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/util/isbnValidator.js" asp-append-version="true"></script>
+    <script src="~/lib/sweetalert2/dist/js/sweetalert2.all.min.js" asp-append-version="true"></script>
+    <script src="~/js/api/googleBooksApiClient.js" asp-append-version="true"></script>
+    <script src="~/js/book-search.js" asp-append-version="true"></script>
+}

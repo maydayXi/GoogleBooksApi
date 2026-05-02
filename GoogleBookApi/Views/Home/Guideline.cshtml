@@ -1,0 +1,29 @@
+﻿@using GoogleBookApi.Controllers
+@using GoogleBookApi.ViewModels
+
+@model IEnumerable<GuidelineItemVm>
+
+@{
+    ViewData["Title"] = nameof(HomeController.Guideline);
+}
+
+@section Headers {
+    <link rel="stylesheet" href="~/css/guideline.css" asp-append-version="true" />
+}
+
+<div class="row justify-content-center align-content-center gy-4 mt-3">
+    @foreach(GuidelineItemVm guideline in Model)
+    {
+        <div class="card col-12 rounded rounded-4 overflow-hidden border-0 px-0">
+            <div class="card-body bg-transparent">
+                <h5 class="card-title py-1 fw-bold">
+                    <i class="@guideline.Icon me-2"></i>
+                    @guideline.Title
+                </h5>
+                <p class="card-text">
+                    @guideline.Description
+                </p>
+            </div>
+        </div>
+    }
+</div>

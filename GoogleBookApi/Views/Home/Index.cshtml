@@ -1,0 +1,21 @@
+﻿@using GoogleBookApi.Controllers
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section id="banner">
+    <div class="row gx-2">
+        <div class="col-md-4 align-middle align-self-center text-end">
+            <h1 class="text-end fw-bolder mb-3">
+                查詢 Google Books <br />書籍基本資料
+            </h1>
+            <a href="@Url.Action(nameof(HomeController.Guideline))" class="btn shadow-sm btn-outline-danger">
+                See more
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="col-md-8 text-center">
+            <img src="image/banner.svg" class="img-fluid w-50" alt="Banner Image" />
+        </div>
+    </div>
+</section>

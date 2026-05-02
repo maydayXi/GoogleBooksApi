@@ -1,0 +1,54 @@
+* {
+    position: relative;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+html, body {
+    background-color: #f7f7f9;
+}
+
+nav .navbar-brand {
+    color: #c03001;
+}
+
+#banner h1,
+#banner .btn-outline-danger {
+    color: #ff6a00;
+}
+
+#banner .btn-outline-danger {
+    border-color: #ff6a00;
+}
+
+    #banner .btn-outline-danger:hover {
+        color: white;
+        font-weight: bold;
+        background: #ff6a00;
+    }
+
+footer {
+    bottom: 0;
+}
+
+@media (max-width: 576px) {
+    header nav .navbar-collapse .nav-item {
+        width: 100%;
+        padding-left: .75rem;
+    }
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
