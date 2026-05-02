@@ -1,7 +1,10 @@
+using ApiService.Enums;
+using ApiService.Extensions;
 using ApiService.Interface;
 using GoogleBookApi.Helper;
 using GoogleBookApi.Models;
 using GoogleBookApi.ViewModels;
+using GoogleBookApi.ViewModels.Components;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -73,7 +76,17 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// <returns>A <see cref="IActionResult"/> that renders the book search page.</returns>
     public IActionResult BookSearch()
     {
-        return View();
+        return View(new BookSearchVm
+        {
+            DropdownItems = [.. Enum.GetValues<BookSearchCriteria>()
+                .Where(criteria => criteria == BookSearchCriteria.ISBN || criteria == BookSearchCriteria.Title)
+                .Select(criteria => new DropdownItemVm
+                {
+                    Icon = WebHelper.GetDropdownItemIconByCriteria(criteria),
+                    Criteria = criteria
+                })
+            ]
+        });
     }
 
     /// <summary>
@@ -84,24 +97,65 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     [HttpGet($"/{nameof(_FetchBookByIsbn)}/{{isbn}}")]
     public async Task<IActionResult> _FetchBookByIsbn([FromRoute] string isbn)
     {
-        if (string.IsNullOrWhiteSpace(isbn)) return BadRequest("ISBN cannot be null or empty.");
+        if (!isbn.IsValidIsbn()) return BadRequest("ISBN cannot be null or empty.");
 
         var bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
 
         if (bookResponse is null) return NotFound($"No book found with ISBN: {isbn}");
 
         (string isbn10, string isbn13) = WebHelper.GetIsbnByTypeFromBookIdentifier(bookResponse.BookIdentifier);
+        string description = bookResponse.Description.Length > 150
+            ? $"{bookResponse.Description[..150]}..."
+            : bookResponse.Description;
+
         return PartialView(new BookVm
         {
             ImageLink = bookResponse.ImageLink,
             Title = bookResponse.Title,
             Author = bookResponse.Author,
             Publisher = bookResponse.Publisher,
-            Description = bookResponse.Description,
+            Description = description,
             Isbn10 = isbn10,
             Isbn13 = isbn13,
             PublishedDate = bookResponse.PublishedDate,
         });
+    }
+
+    /// <summary>
+    /// Fetches book information based on the provided title and returns a partial view with the results.
+    /// </summary>
+    /// <param name="title">The title of the book to retrieve.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the book information if found; otherwise, a NotFound or BadRequest result.</returns>
+    [HttpGet($"/{nameof(_FetchBooksByTitle)}/{{title}}")]
+    public async Task<IActionResult> _FetchBooksByTitle([FromRoute] string title)
+    {
+        if (string.IsNullOrWhiteSpace(title)) return BadRequest("Title cannot be null or empty.");
+
+        var bookResponses = await _googleBookService.FetchBooksByTitleAsync(title);
+
+        if (bookResponses is null || !bookResponses.Any()) return NotFound($"No books found with title: {title}");
+
+        string description;
+        List<BookVm> bookVms = [.. bookResponses.Select(bookResponse =>
+        {
+            description = bookResponse.Description.Length > 150
+                ? $"{bookResponse.Description[..150]}..."
+                : bookResponse.Description;
+            (string isbn10, string isbn13) = WebHelper.GetIsbnByTypeFromBookIdentifier(bookResponse.BookIdentifier);
+            return new BookVm
+            {
+                ImageLink = bookResponse.ImageLink,
+                Title = bookResponse.Title,
+                Author = bookResponse.Author,
+                Publisher = bookResponse.Publisher,
+                Description = description,
+                Isbn10 = isbn10,
+                Isbn13 = isbn13,
+                PublishedDate = bookResponse.PublishedDate,
+            };
+        })];
+
+        return PartialView(bookVms);
     }
 
     /// <summary>
@@ -111,6 +165,11 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     public IActionResult Version()
     {
         List<VersionItemVm> versions = [
+            new() {
+                Version = "1.1.0",
+                Description = "Recactor book search flow to use backend Partial View with AJAX loading.",
+                ReleasedDate = new DateOnly(2026, 5, 2)
+            },
             new() {
                 Version = "1.0.0",
                 Description = "Initial release - Supports searching book information by ISBN.",

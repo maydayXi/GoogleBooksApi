@@ -1,20 +1,12 @@
 ﻿@using GoogleBookApi.Controllers
 @using GoogleBookApi.ViewModels
+@using GoogleBookApi.ViewModels.Components
+
+@model BookSearchVm
 
 @{
     ViewData["Title"] = nameof(HomeController.BookSearch);
     // 9865026864
-
-    IEnumerable<DropdownItemVm> dropdownItems = [
-        new() {
-            DisplayText = "ISBN",
-            Icon = "bi bi-upc"
-        },
-        // new() {
-        //     DisplayText = "Title",
-        //     Icon = "bi bi-journal-text"
-        // }
-    ];
 }
 
 <div class="row justify-content-center align-items-center mb-4">
@@ -25,10 +17,10 @@
                 <span>ISBN</span>
             </button>
             <ul class="dropdown-menu">
-                @foreach (DropdownItemVm dropdownItem in dropdownItems)
+                @foreach (DropdownItemVm dropdownItem in Model.DropdownItems)
                 {
                     <li>
-                        <dropdonw-item icon="@dropdownItem.Icon" aria-label="@dropdownItem.DisplayText">
+                        <dropdonw-item icon="@dropdownItem.Icon" class="text-secondary-emphasis dropdown-item" aria-label="@dropdownItem.DisplayText" search-by="@dropdownItem.Criteria">
                             @dropdownItem.DisplayText
                         </dropdonw-item>
                     </li>
@@ -39,7 +31,7 @@
     </div>
 </div>
 
-<div class="row justify-content-center align-items-center" id="book-search-result"></div>
+<div id="book-search-result"></div>
 
 @section Scripts {
     <script src="~/js/util/isbnValidator.js" asp-append-version="true"></script>

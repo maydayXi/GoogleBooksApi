@@ -13,8 +13,9 @@ html, body {
     background-color: #f7f7f9;
 }
 
-nav .navbar-brand {
-    color: #c03001;
+nav .navbar-brand,
+nav .navbar-brand:hover {
+    color: #ff6a00;
 }
 
 #banner h1,
@@ -31,6 +32,12 @@ nav .navbar-brand {
         font-weight: bold;
         background: #ff6a00;
     }
+
+#book-search > .input-group > .dropdown-menu.show > li > .dropdown-item:active {
+    font-weight: bold;
+    color: white !important;
+    background: #cac4c1 !important;
+}
 
 footer {
     bottom: 0;

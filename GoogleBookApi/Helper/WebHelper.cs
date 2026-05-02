@@ -9,6 +9,21 @@ namespace GoogleBookApi.Helper;
 public class WebHelper
 {
     /// <summary>
+    /// Gets the icon class for a dropdown item based on the specified book search criteria.
+    /// </summary>
+    /// <param name="criteria">The book search criteria.</param>
+    /// <returns>The icon class for the dropdown item.</returns>
+    public static string GetDropdownItemIconByCriteria(BookSearchCriteria criteria) =>
+        criteria switch
+        {
+            BookSearchCriteria.ISBN => "bi bi-upc",
+            BookSearchCriteria.Title => "bi bi-journal-text",
+            BookSearchCriteria.Author => "bi bi-people-fill",
+            BookSearchCriteria.Publisher => "bi bi-building",
+            _ => string.Empty
+        };
+
+    /// <summary>
     /// Gets the name of the specified controller type without the 'Controller' suffix. 
     /// </summary>
     /// <typeparam name="TController">The controller type.</typeparam>

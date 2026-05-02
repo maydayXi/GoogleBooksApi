@@ -3,10 +3,6 @@
     background: #e3ddd9;
 }
 
-    #book-search .dropdown-item:active {
-        background: #cac4c1;
-    }
-
     #book-search input:focus {
         box-shadow: 0 0 0 .25rem white, 0 0 0 .375rem #febf6f !important;
     }

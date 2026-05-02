@@ -1,0 +1,36 @@
+﻿@using GoogleBookApi.ViewModels
+@model BookVm
+
+@{
+    // Image style for book cover
+    string imageStyle = $"background-image: url({Model.ImageLink})";
+}
+
+<div class="card shadow border-0 h-100 pt-2 mb-3" aria-label="Book Search Result">
+    <div class="d-inline-block book-image" style="@imageStyle" aria-label="Book Cover"></div>
+    <div class="card-body">
+        <h5 class="card-title fw-bold mb-3 book-title">@Model.Title</h5>
+        <h6 class="card-subtitle fw-bold text-muted mb-3 book-subtitle">
+            <i class="bi bi-people-fill me-2"></i>
+            @Model.Author - @Model.Publisher
+        </h6>
+        <div class="card-text text-secondary mb-2" id="book-description">@Model.Description</div>
+        <ul class="list-unstyled mb-3">
+            <li class="fw-bold">
+                <i class="bi bi-upc fs-5"></i>10：<span id="isbn-10">@Model.Isbn10</span>
+            </li>
+            <li class="fw-bold">
+                <i class="bi bi-upc fs-5"></i>13：<span id="isbn-13">@Model.Isbn13</span>
+            </li>
+        </ul>
+
+    </div>
+    <div class="card-footer bg-transparent py-3 px-0 mx-auto border-secondary-subtle border-2">
+        <div class="row justify-content-between">
+            <div id="published-date" class="col-6 text-body-secondary">
+                <i class="bi bi-calendar"></i>
+                @(Model.PublishedDate?.ToString("yyyy-MM-dd"))
+            </div>
+        </div>
+    </div>
+</div>

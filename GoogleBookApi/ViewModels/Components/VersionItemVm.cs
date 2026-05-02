@@ -1,4 +1,4 @@
-﻿namespace GoogleBookApi.ViewModels;
+﻿namespace GoogleBookApi.ViewModels.Components;
 
 /// <summary>
 /// Represents the view model for displaying version information in the application.

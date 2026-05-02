@@ -22,6 +22,12 @@ public class DropdownItemTagHelper : TagHelper
     public string AriaLabel { get; set; } = string.Empty;
 
     /// <summary>
+    /// HTML data-search-by attribute, used to specify the search criteria for the dropdown item.
+    /// </summary>
+    [HtmlAttributeName("search-by"), DisplayName("data-search-by")]
+    public string SearchBy { get; set; } = string.Empty;
+
+    /// <summary>
     /// button tag name.
     /// </summary>
     private readonly string button = nameof(button);
@@ -38,10 +44,12 @@ public class DropdownItemTagHelper : TagHelper
         output.TagName = button;
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.SetAttribute("type", button);
-        output.Attributes.SetAttribute("class", "dropdown-item");
 
         if (!string.IsNullOrWhiteSpace(AriaLabel))
-            output.Attributes.SetAttribute(AriaLabel.GetDisplayName<DropdownItemTagHelper>(), AriaLabel);
+            output.Attributes.SetAttribute(nameof(AriaLabel).GetDisplayName<DropdownItemTagHelper>(), AriaLabel);
+
+        if (!string.IsNullOrWhiteSpace(SearchBy))
+            output.Attributes.SetAttribute(nameof(SearchBy).GetDisplayName<DropdownItemTagHelper>(), SearchBy);
 
         // Tag child content
         string childContent = (await output.GetChildContentAsync()).GetContent();

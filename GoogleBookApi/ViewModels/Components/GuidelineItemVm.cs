@@ -1,4 +1,4 @@
-﻿namespace GoogleBookApi.ViewModels;
+﻿namespace GoogleBookApi.ViewModels.Components;
 
 /// <summary>
 /// Represents a view model for an individual guideline item, displaying guideline information in the application.

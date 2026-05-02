@@ -18,3 +18,11 @@
     .card .list-unstyled {
         color: #522C2B !important;
     }
+
+    .card .card-text:last-child {
+        width: calc(100% - 2rem);
+    }
+
+    .card .card-footer {
+        width: 90%;
+    }

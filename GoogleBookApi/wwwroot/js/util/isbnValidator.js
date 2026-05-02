@@ -44,7 +44,7 @@ const isbnValidator = (() => {
      * Checks if the given ISBN-13 is valid.
      * @param {string} isbn - The ISBN-13 to validate.
      */
-    const isVAlidIsbn13 = isbn => {
+    const isValidIsbn13 = isbn => {
         if (!/^[0-9]{13}$/.test(isbn)) return false;
 
         let weights = [1, 3];
@@ -64,7 +64,7 @@ const isbnValidator = (() => {
         const normalizedIsbn = normalizeIsbn(isbn);
 
         if (isbn.length === 10) return isValidIsbn10(normalizedIsbn);
-        if (isbn.length === 13) return isVAlidIsbn13(normalizedIsbn);
+        if (isbn.length === 13) return isValidIsbn13(normalizedIsbn);
 
         return false;
     };
@@ -79,7 +79,7 @@ const isbnValidator = (() => {
         const isbn = normalizeIsbn(input);
 
         if (isValidIsbn10(isbn)) return "ISBN-10";
-        if (isVAlidIsbn13(isbn)) return "ISBN-13";
+        if (isValidIsbn13(isbn)) return "ISBN-13";
 
         return null;
     };
