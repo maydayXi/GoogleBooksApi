@@ -93,7 +93,6 @@ const isbnValidator = (() => {
      * @returns {IsbnValidationResult} An object containing the validation result, type, and normalized ISBN.
      */
     const validate = isbn => {
-        debugger;
         const normalizedIsbn = normalizeIsbn(isbn),
             type = getType(normalizedIsbn);
 

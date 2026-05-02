@@ -13,14 +13,7 @@
         searchInput = $("book-search-criteria"),
         dropdownBtns = document.querySelectorAll("button.dropdown-item");
 
-    let bookSearchResult = $("book-search-result"),
-        bookTitle = $("book-title"),
-        bookSubTitle = $("book-subtitle"),
-        bookImage = $("book-image"),
-        bookDescription = $("book-description"),
-        publishedDate = $("published-date"),
-        isbn10 = $("isbn-10"),
-        isbn13 = $("isbn-13");
+    let bookSearchResult = $("book-search-result");
 
     const INVISIBLE_CLASS = "d-none";
 
@@ -52,6 +45,8 @@
             e.preventDefault();
             loader.classList.remove(INVISIBLE_CLASS);
             const searchTerm = searchInput.value.trim();
+
+            let defaultErrorMessage = "An error occurred while fetching book data.";
             try {
                 const isbnValidationResult = isbnValidator.validate(searchTerm);
 
@@ -65,32 +60,37 @@
                     return;
                 }
 
-                const response = await googleApiClient.fetchByIsbnAsync(searchTerm);
+                const response = await fetch(`/${encodeURIComponent('_FetchBookByIsbn')}/${encodeURIComponent(searchTerm)}`, {
+                    method: "GET",
+                    headers: {
+                        'Accept': 'text/html'
+                    }
+                });
 
-                bookImage.style = `background-image: url(${response.imageLink})`;
-                bookTitle.textContent = response.title || "";
-                bookSubTitle.querySelector("span").textContent = `${response.author} - ${response.publisher}`
+                if (!response.ok) {
+                    const message = await response.text();
 
-                bookDescription.textContent =
-                    `${response.description?.substring(0, 130)}${response.description ? "..." : ""}`;
+                    if (response.status === 400 || response.status === 404)
+                        defaultErrorMessage = response.status === 400 ? "Bad Request" : "Book Not Found";    
 
-                const { bookIdentifier } = response;
-                isbn10.textContent = bookIdentifier?.ISBN_10 || "";
-                isbn13.textContent = bookIdentifier?.ISBN_13 || "";
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: message || defaultErrorMessage
+                    });
+                    return;
+                }
 
-                publishedDate.querySelector("span").textContent = response.publishedDate || "";
-
-                bookSearchResult.classList.remove(INVISIBLE_CLASS);
+                bookSearchResult.innerHTML = await response.text();
                 searchInput.value = "";
             }
             catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Error",
-                    text: error.message || "An error occurred while fetching book data."
+                    text: error.message || defaultErrorMessage
                 });
                 console.error("Error fetching book data:", error);
-                bookSearchResult.classList.add(INVISIBLE_CLASS);
             }
             finally {
                 loader.classList.add(INVISIBLE_CLASS);

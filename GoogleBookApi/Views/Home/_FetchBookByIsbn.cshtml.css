@@ -1,0 +1,20 @@
+﻿.card {
+    background: #fdf6f2;
+}
+
+    .card .book-image {
+        height: 198px;
+        max-height: 248px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .card .book-title {
+        color: #d26e4d;
+    }
+
+    .card .book-subtitle,
+    .card .list-unstyled {
+        color: #522C2B !important;
+    }

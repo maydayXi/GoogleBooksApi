@@ -1,3 +1,5 @@
+using ApiService.Interface;
+using GoogleBookApi.Helper;
 using GoogleBookApi.Models;
 using GoogleBookApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +11,18 @@ namespace GoogleBookApi.Controllers;
 /// Controller for handling requests related to the application's home and informational pages.
 /// </summary>
 /// <param name="logger">The logger used to record application events.</param>
-public class HomeController(ILogger<HomeController> logger) : Controller
+/// <param name="googleBookService">The service responsible for handling Google Books operations.</param>
+public class HomeController(ILogger<HomeController> logger, IGoogleBookService googleBookService) : Controller
 {
     /// <summary>
     /// Provides logging capabilities for the HomeController.
     /// </summary>
     private readonly ILogger<HomeController> _logger = logger;
+
+    /// <summary>
+    /// Google Book service for fetching book information.
+    /// </summary>
+    private readonly IGoogleBookService _googleBookService = googleBookService;
 
     /// <summary>
     /// Displays the home page of the application.
@@ -66,6 +74,34 @@ public class HomeController(ILogger<HomeController> logger) : Controller
     public IActionResult BookSearch()
     {
         return View();
+    }
+
+    /// <summary>
+    /// Fetches book information based on the provided ISBN and returns a partial view with the results.
+    /// </summary>
+    /// <param name="isbn">The ISBN of the book to retrieve.</param>
+    /// <returns>An <see cref="IActionResult"/> containing the book information if found; otherwise, a NotFound or BadRequest result.</returns>
+    [HttpGet($"/{nameof(_FetchBookByIsbn)}/{{isbn}}")]
+    public async Task<IActionResult> _FetchBookByIsbn([FromRoute] string isbn)
+    {
+        if (string.IsNullOrWhiteSpace(isbn)) return BadRequest("ISBN cannot be null or empty.");
+
+        var bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
+
+        if (bookResponse is null) return NotFound($"No book found with ISBN: {isbn}");
+
+        (string isbn10, string isbn13) = WebHelper.GetIsbnByTypeFromBookIdentifier(bookResponse.BookIdentifier);
+        return PartialView(new BookVm
+        {
+            ImageLink = bookResponse.ImageLink,
+            Title = bookResponse.Title,
+            Author = bookResponse.Author,
+            Publisher = bookResponse.Publisher,
+            Description = bookResponse.Description,
+            Isbn10 = isbn10,
+            Isbn13 = isbn13,
+            PublishedDate = bookResponse.PublishedDate,
+        });
     }
 
     /// <summary>
