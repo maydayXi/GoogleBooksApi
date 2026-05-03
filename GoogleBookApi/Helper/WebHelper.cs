@@ -9,6 +9,16 @@ namespace GoogleBookApi.Helper;
 public class WebHelper
 {
     /// <summary>
+    /// Gets the relative file path to the guideline JSON file.
+    /// </summary>
+    public static string GuidelineJsonFilePath => @"data\guideline.json";
+
+    /// <summary>
+    /// Gets the relative file path to the version.json data file.
+    /// </summary>
+    public static string VersionJsonFilePath => @"data\version.json";
+
+    /// <summary>
     /// Gets the icon class for a dropdown item based on the specified book search criteria.
     /// </summary>
     /// <param name="criteria">The book search criteria.</param>

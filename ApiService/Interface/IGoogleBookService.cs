@@ -1,4 +1,5 @@
 ﻿using ApiService.Dtos;
+using ApiService.Dtos.Response;
 
 namespace ApiService.Interface;
 
@@ -12,7 +13,7 @@ public interface IGoogleBookService
     /// </summary>
     /// <param name="isbn">The ISBN of the book to retrieve.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the book search response.</returns>
-    Task<BookSearchResponseDto?> FetchBookByIsbnAsync(string isbn);
+    Task<ApiResponse<BookSearchResponseDto>> FetchBookByIsbnAsync(string isbn);
 
     /// <summary>
     /// Asynchronously retrieves a collection of books matching the specified title.
@@ -22,5 +23,5 @@ public interface IGoogleBookService
     /// A task that represents the asynchronous operation. 
     /// The task result contains a collection of matching books.
     /// </returns>
-    Task<IEnumerable<BookSearchResponseDto>> FetchBooksByTitleAsync(string title);
+    Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByTitleAsync(string title);
 }

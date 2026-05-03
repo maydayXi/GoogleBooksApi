@@ -1,6 +1,8 @@
 ﻿using ApiInfrastructure.Options;
 using ApiService.Dtos;
 using ApiService.Dtos.GoogleBooks;
+using ApiService.Dtos.Response;
+using ApiService.Enums;
 using ApiService.Extensions;
 using ApiService.Interface;
 using Microsoft.Extensions.Options;
@@ -14,7 +16,7 @@ namespace ApiInfrastructure.ExternalServices;
 /// such as fetching book data from the Google Books API, 
 /// processing book information, and providing book-related functionalities to the application.
 /// </summary>
-public class GoogleBookService(IOptions<GoogleBooksOptions> options) : IGoogleBookService
+public class GoogleBookService(IOptions<GoogleBooksOptions> options) : GoogleBooksServiceBase, IGoogleBookService
 {
     /// <summary>
     /// Provides HTTP functionality for sending requests and receiving responses.
@@ -37,48 +39,63 @@ public class GoogleBookService(IOptions<GoogleBooksOptions> options) : IGoogleBo
         PropertyNameCaseInsensitive = true
     };
 
-    public async Task<BookSearchResponseDto?> FetchBookByIsbnAsync(string isbn)
+    public async Task<ApiResponse<BookSearchResponseDto>> FetchBookByIsbnAsync(string isbn)
     {
-        if (string.IsNullOrWhiteSpace(isbn)) return null;
+        if (string.IsNullOrWhiteSpace(isbn) || !isbn.IsValidIsbn())
+            return BadRequestResponse<BookSearchResponseDto>("Invalid ISBN provided. Please provide a valid ISBN-10 or ISBN-13.");
 
+        BookSearchCriteria criteria = BookSearchCriteria.ISBN;
         string requestUri = $"?q=isbn:{isbn}&key={_options.ApiKey}";
 
-        using var response = await _httpClient.GetAsync(requestUri);
-        if (!response.IsSuccessStatusCode) return null;
+        try
+        {
+            using HttpResponseMessage response = await _httpClient.GetAsync(requestUri);
+            if (!response.IsSuccessStatusCode) return BadGetwayResponse<BookSearchResponseDto>(response.StatusCode);
 
-        GoogleBooksApiResponseDto googleBooksApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>(_jsonOptions)
-            ?? throw new InvalidOperationException("Failed to deserialize Google Books API response.");
+            GoogleBooksApiResponseDto? googleBooksApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>(_jsonOptions);
 
-        if (googleBooksApiResponse is null || googleBooksApiResponse.TotalItems <= 0 ||
-            googleBooksApiResponse.Items.Count <= 0)
-            return null;
+            if (googleBooksApiResponse is null || googleBooksApiResponse.TotalItems <= 0 ||
+                googleBooksApiResponse.Items.Count <= 0)
+                return NotFoundResponse<BookSearchResponseDto>(criteria, isbn);
 
-        GoogleBookItemDto? googleBook = googleBooksApiResponse.Items.FirstOrDefault();
-        if (googleBook?.VolumeInfo is null) return null;
+            GoogleBookItemDto? googleBook = googleBooksApiResponse.Items.FirstOrDefault();
+            if (googleBook?.VolumeInfo is null)
+                return NotFoundResponse<BookSearchResponseDto>(criteria, isbn);
 
-        return googleBook.ToBookSearchResponse();
+            return SuccessResponse(googleBook);
+        }
+        catch (Exception ex)
+        {
+            return InternalServerErrorResponse<BookSearchResponseDto>(ex);
+        }
     }
 
-    public async Task<IEnumerable<BookSearchResponseDto>> FetchBooksByTitleAsync(string title)
+    public async Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByTitleAsync(string title)
     {
-        if (string.IsNullOrWhiteSpace(title)) return [];
+        if (string.IsNullOrWhiteSpace(title))
+            return BadRequestResponse<IEnumerable<BookSearchResponseDto>>(
+                "Title cannot be empty. Please provide a valid book title.");
 
+        BookSearchCriteria criteria = BookSearchCriteria.Title;
         string requestUrl = $"?q=intitle:{title}&key={_options.ApiKey}";
 
-        using var response = await _httpClient.GetAsync(requestUrl);
-        if (!response.IsSuccessStatusCode) return [];
+        try
+        {
+            using HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+            if (!response.IsSuccessStatusCode)
+                return BadGetwayResponse<IEnumerable<BookSearchResponseDto>>(response.StatusCode);
 
-        GoogleBooksApiResponseDto googleBookApiResponse =
-            await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>()
-            ?? throw new InvalidOperationException("Failed to deserialize Google Books API response");
+            GoogleBooksApiResponseDto? googleBookApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>();
 
-        if (googleBookApiResponse is null || googleBookApiResponse.TotalItems <= 0 ||
-            googleBookApiResponse.Items.Count <= 0)
-            return [];
+            if (googleBookApiResponse is null || googleBookApiResponse.TotalItems <= 0 ||
+                googleBookApiResponse.Items.Count <= 0)
+                return NotFoundResponse<IEnumerable<BookSearchResponseDto>>(criteria, title);
 
-        IEnumerable<BookSearchResponseDto> books = googleBookApiResponse.Items.Select(book =>
-            book.ToBookSearchResponse());
-
-        return books;
+            return SuccessResponse(googleBookApiResponse.Items);
+        }
+        catch (Exception ex)
+        {
+            return InternalServerErrorResponse<IEnumerable<BookSearchResponseDto>>(ex);
+        }
     }
 }

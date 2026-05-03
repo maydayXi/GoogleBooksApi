@@ -1,4 +1,6 @@
 ﻿using ApiService.Dtos;
+using ApiService.Dtos.Response;
+using ApiService.Extensions;
 using ApiService.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,11 +26,14 @@ public class GoogleBooksController(IGoogleBookService googleBookService) : Contr
     [HttpGet($"{nameof(BookInfo)}/{{isbn}}")]
     public async Task<IActionResult> BookInfo(string isbn)
     {
-        if (string.IsNullOrWhiteSpace(isbn)) return BadRequest("ISBN cannot be null or empty.");
+        if (string.IsNullOrWhiteSpace(isbn) && !isbn.IsValidIsbn()) return BadRequest("ISBN cannot be null or empty.");
 
-        BookSearchResponseDto? bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
+        ApiResponse<BookSearchResponseDto> bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
 
-        if (bookResponse is null) return NotFound($"No book found with ISBN: {isbn}");
+        if (!bookResponse.IsSuccess)
+        {
+
+        }
 
         return Ok(bookResponse);
     }

@@ -1,6 +1,9 @@
+using ApiService.Dtos;
+using ApiService.Dtos.Response;
 using ApiService.Enums;
 using ApiService.Extensions;
 using ApiService.Interface;
+using GoogleBookApi.Extensions;
 using GoogleBookApi.Helper;
 using GoogleBookApi.Models;
 using GoogleBookApi.ViewModels;
@@ -56,7 +59,7 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// <returns>A <see cref="IActionResult"/> that renders the home page view.</returns>
     public IActionResult Guideline()
     {
-        var guidelineItems = _guidelineDataProvider.GetListDataFromJson(@"data\guideline.json");
+        var guidelineItems = _guidelineDataProvider.GetListDataFromJson(WebHelper.GuidelineJsonFilePath);
         return View(guidelineItems);
     }
 
@@ -87,28 +90,15 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     [HttpGet($"/{nameof(_FetchBookByIsbn)}/{{isbn}}")]
     public async Task<IActionResult> _FetchBookByIsbn([FromRoute] string isbn)
     {
-        if (!isbn.IsValidIsbn()) return BadRequest("ISBN cannot be null or empty.");
+        if (!isbn.IsValidIsbn()) return BadRequest($"Invalid ISBN: {isbn}.");
 
-        var bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
+        ApiResponse<BookSearchResponseDto> bookResponse = await _googleBookService.FetchBookByIsbnAsync(isbn);
 
-        if (bookResponse is null) return NotFound($"No book found with ISBN: {isbn}");
+        if (!bookResponse.IsSuccess)
+            return StatusCode(bookResponse.HttpStatusCode, bookResponse);
 
-        (string isbn10, string isbn13) = WebHelper.GetIsbnByTypeFromBookIdentifier(bookResponse.BookIdentifier);
-        string description = bookResponse.Description.Length > 150
-            ? $"{bookResponse.Description[..150]}..."
-            : bookResponse.Description;
-
-        return PartialView(new BookVm
-        {
-            ImageLink = bookResponse.ImageLink,
-            Title = bookResponse.Title,
-            Author = bookResponse.Author,
-            Publisher = bookResponse.Publisher,
-            Description = description,
-            Isbn10 = isbn10,
-            Isbn13 = isbn13,
-            PublishedDate = bookResponse.PublishedDate,
-        });
+        BookSearchResponseDto book = bookResponse.Data!;
+        return PartialView(book.ToBookViewModel());
     }
 
     /// <summary>
@@ -121,30 +111,13 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     {
         if (string.IsNullOrWhiteSpace(title)) return BadRequest("Title cannot be null or empty.");
 
-        var bookResponses = await _googleBookService.FetchBooksByTitleAsync(title);
+        ApiResponse<IEnumerable<BookSearchResponseDto>> booksResponse = await _googleBookService.FetchBooksByTitleAsync(title);
 
-        if (bookResponses is null || !bookResponses.Any()) return NotFound($"No books found with title: {title}");
+        if (!booksResponse.IsSuccess)
+            return StatusCode(booksResponse.HttpStatusCode, booksResponse);
 
-        string description;
-        List<BookVm> bookVms = [.. bookResponses.Select(bookResponse =>
-        {
-            description = bookResponse.Description.Length > 150
-                ? $"{bookResponse.Description[..150]}..."
-                : bookResponse.Description;
-            (string isbn10, string isbn13) = WebHelper.GetIsbnByTypeFromBookIdentifier(bookResponse.BookIdentifier);
-            return new BookVm
-            {
-                ImageLink = bookResponse.ImageLink,
-                Title = bookResponse.Title,
-                Author = bookResponse.Author,
-                Publisher = bookResponse.Publisher,
-                Description = description,
-                Isbn10 = isbn10,
-                Isbn13 = isbn13,
-                PublishedDate = bookResponse.PublishedDate,
-            };
-        })];
-
+        IEnumerable<BookSearchResponseDto> books = booksResponse.Data!;
+        IEnumerable<BookVm> bookVms = books.ToBooksViewModel();
         return PartialView(bookVms);
     }
 
@@ -154,7 +127,7 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// <returns>The view for the version information.</returns>
     public IActionResult Version()
     {
-        var versions = _versionDataProvider.GetListDataFromJson(@"data\version.json");
+        var versions = _versionDataProvider.GetListDataFromJson(WebHelper.VersionJsonFilePath);
         return View(versions);
     }
 

@@ -39,6 +39,21 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.2 
+
+refactor: standardize Google Books API responses
+
+- Update `GoogleBookService` and its interface to return `ApiResponse<T>`.
+- Add `GoogleBooksServiceBase` for shared response factory methods.
+- Adjust `HomeControll` and `GoogleBooksController` to handle standardized API responses.
+- Add `ResponseDataExtension` to simplify ViewModel mapping.
+- Extract common file path constants into `WebHelper`.
+- Add dotnet-ef tool configuration
+- Improve error handling, readability, and maintainability
+- fix: `version.json` released date.
+
+Release date: 2026-05-03
+
 ### 1.2.1
 
 refactor: load guideline and version data from JSON files
@@ -48,6 +63,8 @@ refactor: load guideline and version data from JSON files
 - Add data/guideline.json and data/version.json
 - Register JSON data provider services in Program.cs
 - Improve maintainability of static page content
+
+Release date: 2026-05-03
 
 ### 1.2.0 
 
