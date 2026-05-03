@@ -39,6 +39,12 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.3 
+
+fix: releaseDate type in `version.json`
+
+Release date: 2026-05-03
+
 ### 1.2.2 
 
 refactor: standardize Google Books API responses

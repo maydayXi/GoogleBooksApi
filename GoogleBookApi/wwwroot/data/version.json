@@ -1,8 +1,13 @@
 [
     {
+        "version": "1.2.3",
+        "description": "Fix `releaseDate` typo in version.json.",
+        "releasedDate": "2026-05-03"
+    },
+    {
         "version": "1.2.2",
         "description": "Refactor standardize Google Books API responses",
-        "relasedDate": "2026-05-03"
+        "releasedDate": "2026-05-03"
     },
     {
         "version": "1.2.1",
