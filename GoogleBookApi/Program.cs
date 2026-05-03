@@ -1,6 +1,8 @@
 using ApiInfrastructure.ExternalServices;
 using ApiInfrastructure.Options;
 using ApiService.Interface;
+using GoogleBookApi.Helper;
+using GoogleBookApi.ViewModels.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,9 @@ string GoogleBooks = nameof(GoogleBooks);
 
 builder.Services
     .Configure<GoogleBooksOptions>(builder.Configuration.GetSection(GoogleBooks))
-    .AddScoped<IGoogleBookService, GoogleBookService>();
+    .AddScoped<IGoogleBookService, GoogleBookService>()
+    .AddSingleton<IJsonDataProvider<GuidelineItemVm>, AppDataProvider<GuidelineItemVm>>()
+    .AddSingleton<IJsonDataProvider<VersionItemVm>, AppDataProvider<VersionItemVm>>();
 
 var app = builder.Build();
 

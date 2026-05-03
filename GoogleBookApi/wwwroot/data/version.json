@@ -1,0 +1,22 @@
+[
+    {
+        "version": "1.2.1",
+        "description": "Refactor guideline page and version page to load data from JSON files.",
+        "releasedDate": "2025-05-03"
+    },
+    {
+        "version": "1.2.0",
+        "description": "Support title search and improve book search UI.",
+        "releasedDate": "2025-05-03"
+    },
+    {
+        "version": "1.1.0",
+        "description": "Recactor book search flow to use backend Partial View with AJAX loading.",
+        "releasedDate": "2025-05-02"
+    },
+    {
+        "version": "1.0.0",
+        "description": "Initial release - Supports searching book information by ISBN.",
+        "releasedDate": "2025-05-01"
+    }
+]

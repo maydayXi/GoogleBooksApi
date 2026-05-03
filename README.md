@@ -39,6 +39,16 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.1
+
+refactor: load guideline and version data from JSON files
+
+- Replace hardcoded guideline and version data in `HomeController`
+- Add `IJsonDataProvider` and `AppDataProvider` for loading static JSON data
+- Add data/guideline.json and data/version.json
+- Register JSON data provider services in Program.cs
+- Improve maintainability of static page content
+
 ### 1.2.0 
 
 Support title search and improve book search UI

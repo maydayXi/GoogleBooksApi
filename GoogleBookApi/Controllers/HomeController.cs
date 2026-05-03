@@ -15,7 +15,9 @@ namespace GoogleBookApi.Controllers;
 /// </summary>
 /// <param name="logger">The logger used to record application events.</param>
 /// <param name="googleBookService">The service responsible for handling Google Books operations.</param>
-public class HomeController(ILogger<HomeController> logger, IGoogleBookService googleBookService) : Controller
+public class HomeController(ILogger<HomeController> logger, IGoogleBookService googleBookService,
+    IJsonDataProvider<VersionItemVm> versionDataProvider, IJsonDataProvider<GuidelineItemVm> guidelineDataProvider)
+    : Controller
 {
     /// <summary>
     /// Provides logging capabilities for the HomeController.
@@ -26,6 +28,16 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// Google Book service for fetching book information.
     /// </summary>
     private readonly IGoogleBookService _googleBookService = googleBookService;
+
+    /// <summary>
+    /// Version data provider for retrieving version information from JSON files.
+    /// </summary>
+    private readonly IJsonDataProvider<VersionItemVm> _versionDataProvider = versionDataProvider;
+
+    /// <summary>
+    /// Provides access to guideline item data using a JSON data provider.
+    /// </summary>
+    private readonly IJsonDataProvider<GuidelineItemVm> _guidelineDataProvider = guidelineDataProvider;
 
     /// <summary>
     /// Displays the home page of the application.
@@ -44,29 +56,7 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// <returns>A <see cref="IActionResult"/> that renders the home page view.</returns>
     public IActionResult Guideline()
     {
-        List<GuidelineItemVm> guidelineItems = [
-            new() {
-                Icon = "bi bi-google",
-                Title = "資料來源",
-                Description = "使用 Google Books API 作為資料來源，提供書籍資訊的查詢功能。"
-            },
-            new() {
-                Icon = "bi bi-info-square",
-                Title = "顯示資料",
-                Description = "書籍封面、書名、作者、出版社、書籍簡介、出版日期、ISBN-10、ISBN-13"
-            },
-            new() {
-                Icon = "bi bi-upc",
-                Title = "ISBN 查詢功能",
-                Description = "在搜尋欄位中輸入書籍的 ISBN，系統會依據輸入的 ISBN 查詢對應的書籍資料。"
-            },
-            new() {
-                Icon = "bi bi-exclamation-lg",
-                Title = "查無資料",
-                Description = "ISBN 輸入錯誤，或資料源沒有提供書籍資料"
-            }
-        ];
-
+        var guidelineItems = _guidelineDataProvider.GetListDataFromJson(@"data\guideline.json");
         return View(guidelineItems);
     }
 
@@ -164,24 +154,7 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
     /// <returns>The view for the version information.</returns>
     public IActionResult Version()
     {
-        List<VersionItemVm> versions = [
-            new() {
-                Version = "1.2.0",
-                Description = "Support title search and improve book search UI.",
-                ReleasedDate = new DateOnly(2026, 5, 3)
-            },
-            new() {
-                Version = "1.1.0",
-                Description = "Recactor book search flow to use backend Partial View with AJAX loading.",
-                ReleasedDate = new DateOnly(2026, 5, 2)
-            },
-            new() {
-                Version = "1.0.0",
-                Description = "Initial release - Supports searching book information by ISBN.",
-                ReleasedDate = new DateOnly(2026, 5, 1)
-            }
-        ];
-
+        var versions = _versionDataProvider.GetListDataFromJson(@"data\version.json");
         return View(versions);
     }
 
