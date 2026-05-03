@@ -39,6 +39,16 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.4
+
+fix: allow nullable Google Books description
+
+- Change `GoogleBookVolumeInfoDto.Description` from required string to `string?`
+- Allow missing description values from Google Books API
+- Improve DTO compatibility with incomplete API responses
+
+Release date: 2026-05-04
+
 ### 1.2.3 
 
 fix: releaseDate type in `version.json`

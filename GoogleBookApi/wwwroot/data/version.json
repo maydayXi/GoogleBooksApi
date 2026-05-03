@@ -1,5 +1,10 @@
 [
     {
+        "version": "1.2.4",
+        "description": "Fix: Allow missing description values from Google Books API improve DTO compatibility with incomplete API responses.",
+        "releasedDate": "2026-05-04"
+    },
+    {
         "version": "1.2.3",
         "description": "Fix `releaseDate` typo in version.json.",
         "releasedDate": "2026-05-03"

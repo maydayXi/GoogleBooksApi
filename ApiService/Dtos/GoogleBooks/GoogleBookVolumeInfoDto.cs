@@ -36,7 +36,7 @@ public class GoogleBookVolumeInfoDto
     /// Book description, representing a brief summary or overview of the book's content as provided by the Google Books API.
     /// </summary>
     [JsonPropertyName("description")]
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Google book industry identifiers, representing a list of industry identifiers (e.g., ISBN numbers) 
