@@ -11,8 +11,8 @@
     },
     {
         "icon": "bi bi-upc",
-        "title": "ISBN 查詢功能",
-        "description": "在搜尋欄位中輸入書籍的 ISBN，系統會依據輸入的 ISBN 查詢對應的書籍資料。"
+        "title": "查詢功能",
+        "description": "在搜尋欄位中輸入書籍的 ISBN 或標題，系統會依據輸入的 ISBN 查詢對應的書籍資料。"
     },
     {
         "icon": "bi bi-exclamation-lg",

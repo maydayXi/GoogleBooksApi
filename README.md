@@ -39,6 +39,16 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.2.5
+
+fix: improve Google Books response handling and add Serilog logging.
+
+- Add Serilog logging with console and file sinks for error.
+- Capture application startup failures and JSON deserialization exceptions.
+- Log Google Books request URLs and parsing details to aid Azure troubleshooting.
+- Relax Google books DTO property types to handle incomplete or inconsistent API responses.
+- Add standardized error responses for JSON parsing failures.
+
 ### 1.2.4
 
 fix: allow nullable Google Books description

@@ -26,11 +26,11 @@ public static class GoogleBookExtension
                 ? string.Join("/", googleBook.VolumeInfo.Authors)
                 : string.Empty,
             Description = googleBook.VolumeInfo?.Description ?? string.Empty,
-            ImageLink = googleBook.VolumeInfo?.ImageLinks?.Thumbnail ?? string.Empty,
+            ImageLink = googleBook.VolumeInfo?.ImageLinks.Thumbnail ?? string.Empty,
             Publisher = googleBook.VolumeInfo?.Publisher ?? string.Empty,
             PublishedDate = DateOnly.TryParse(googleBook.VolumeInfo?.PublishedDate, out DateOnly publishedDate)
                 ? publishedDate
-                : null,
+                : null
         };
 
         if (bookIdentifier is null) return searchResponse;
