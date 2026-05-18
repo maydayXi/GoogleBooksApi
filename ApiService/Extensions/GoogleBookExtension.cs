@@ -28,7 +28,9 @@ public static class GoogleBookExtension
             Description = googleBook.VolumeInfo?.Description ?? string.Empty,
             ImageLink = googleBook.VolumeInfo?.ImageLinks?.Thumbnail ?? string.Empty,
             Publisher = googleBook.VolumeInfo?.Publisher ?? string.Empty,
-            PublishedDate = googleBook.VolumeInfo?.PublishedDate,
+            PublishedDate = DateOnly.TryParse(googleBook.VolumeInfo?.PublishedDate, out DateOnly publishedDate)
+                ? publishedDate
+                : null,
         };
 
         if (bookIdentifier is null) return searchResponse;

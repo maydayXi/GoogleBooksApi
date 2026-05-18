@@ -24,19 +24,19 @@ public class GoogleBookVolumeInfoDto
     /// Publisher of the book, representing the name of the publisher associated with the book as provided by the Google Books API.
     /// </summary>
     [JsonPropertyName("publisher")]
-    public required string Publisher { get; set; }
+    public string Publisher { get; set; } = string.Empty;
 
     /// <summary>
     /// Book published date, representing the date when the book was published as provided by the Google Books API.
     /// </summary>
     [JsonPropertyName("publishedDate")]
-    public DateOnly PublishedDate { get; set; }
+    public string PublishedDate { get; set; } = string.Empty;
 
     /// <summary>
     /// Book description, representing a brief summary or overview of the book's content as provided by the Google Books API.
     /// </summary>
     [JsonPropertyName("description")]
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Google book industry identifiers, representing a list of industry identifiers (e.g., ISBN numbers) 

@@ -4,6 +4,7 @@ using ApiService.Dtos.Response;
 using ApiService.Enums;
 using ApiService.Extensions;
 using System.Net;
+using System.Text.Json;
 
 namespace ApiInfrastructure.ExternalServices;
 
@@ -106,6 +107,15 @@ public class GoogleBooksServiceBase
         HttpStatusCode = (int)HttpStatusCode.InternalServerError,
         ApiResponseStatus = ApiResponseStatus.SystemError,
         Message = $"An error occurred while processing the request: {exception.Message}",
+        Data = null,
+    };
+
+    protected static ApiResponse<IEnumerable<BookSearchResponseDto>> JsonParseExceptionResponse(JsonException exception) => new()
+    {
+        IsSuccess = false,
+        HttpStatusCode = (int)HttpStatusCode.InternalServerError,
+        ApiResponseStatus = ApiResponseStatus.SystemError,
+        Message = $"Failed to parse JSON response from Google Books API:\nPath: {exception.Path}\nMessage: {exception.Message}",
         Data = null,
     };
 }
