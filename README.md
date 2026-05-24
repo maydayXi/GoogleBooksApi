@@ -39,6 +39,12 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.3.0
+
+feature: Add pagination support for book title search (v1.3.0)
+
+Release data: 2026-05-24
+
 ### 1.2.5
 
 fix: improve Google Books response handling and add Serilog logging.
@@ -48,6 +54,8 @@ fix: improve Google Books response handling and add Serilog logging.
 - Log Google Books request URLs and parsing details to aid Azure troubleshooting.
 - Relax Google books DTO property types to handle incomplete or inconsistent API responses.
 - Add standardized error responses for JSON parsing failures.
+
+Release date: 2026-05-18
 
 ### 1.2.4
 
