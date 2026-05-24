@@ -1,4 +1,5 @@
-﻿@using GoogleBookApi.Controllers
+﻿@using ApiService.Enums
+@using GoogleBookApi.Controllers
 @using GoogleBookApi.ViewModels
 @using GoogleBookApi.ViewModels.Components
 
@@ -11,22 +12,38 @@
 
 <div class="row justify-content-center align-items-center mb-4">
     <div id="book-search" class="card shadow border-0 rounded rounded-3 mt-3">
-        <div class="input-group my-3 shadow-sm">
-            <button id="btn-search-by" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i id="search-by-icon" class="bi bi-upc me-2"></i>
-                <span>ISBN</span>
-            </button>
-            <ul class="dropdown-menu">
-                @foreach (DropdownItemVm dropdownItem in Model.DropdownItems)
-                {
-                    <li>
-                        <dropdonw-item icon="@dropdownItem.Icon" class="text-secondary-emphasis dropdown-item" aria-label="@dropdownItem.DisplayText" search-by="@dropdownItem.Criteria">
-                            @dropdownItem.DisplayText
-                        </dropdonw-item>
-                    </li>
-                }
-            </ul>
-            <input type="text" id="book-search-criteria" class="form-control border-0" aria-label="Book Search Criteria" />
+        <div class="d-flex justify-content-between">
+            <div class="input-group my-3 shadow-sm w-75">
+                <button id="btn-search-by" class="btn btn-secondary dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i id="search-by-icon" class="bi bi-upc me-2"></i>
+                    <span>ISBN</span>
+                </button>
+                <ul class="dropdown-menu">
+                    @foreach (DropdownItemVm dropdownItem in Model.DropdownItems)
+                    {
+                        <li>
+                            <dropdonw-item icon="@dropdownItem.Icon" class="text-secondary-emphasis dropdown-item"
+                                           aria-label="@dropdownItem.DisplayText" search-by="@dropdownItem.Criteria">
+                                @dropdownItem.DisplayText
+                            </dropdonw-item>
+                        </li>
+                    }
+                </ul>
+                <input type="text" id="book-search-criteria" class="form-control border-0"
+                       aria-label="Book Search Criteria"/>
+            </div>
+            <div id="page-size-wrap" class="row w-20 my-3 d-none">
+                <label for="page-size" class="col-6 col-form-label text-end">Page Size</label>
+                <div class="col-6">
+                    <select id="page-size" class="form-control border-0 shadow-sm">
+                        @foreach (PageSize pageSize in Enum.GetValues(typeof(PageSize)))
+                        {
+                            <option value="@((int)pageSize)">@((int)pageSize)</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 </div>

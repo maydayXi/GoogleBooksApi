@@ -6,7 +6,7 @@
 /**
  * JSDoc Type definition for search action 
  * 
- * @typedef {Object} BookSearchOption -  The result of the validation and the API URL for the book search.
+ * @typedef {Object} BookSearchOption - The result of the validation and the API URL for the book search.
  * @property {bool} passValidation - Indicates whether the input passed validation.
  * @property {Object|null} sweetAlertConfig - The configuration object for SweetAlert if validation fails, or null if validation passes.
  * @property {string} apiUrl - The API URL for fetching book data based on the search criteria.
@@ -28,11 +28,24 @@
         btnSearchBy = $("btn-search-by"),
         searchByIcon = $("search-by-icon"),
         searchInput = $("book-search-criteria"),
-        dropdownBtns = document.querySelectorAll("button.dropdown-item");
-
+        dropdownBtns = document.querySelectorAll("button.dropdown-item"),
+        pageSizeWrapper = $("page-size-wrap"),
+        pageSize = pageSizeWrapper.querySelector("#page-size");
+    
     let bookSearchResult = $("book-search-result");
 
     const INVISIBLE_CLASS = "d-none";
+
+    /**
+     * Stores the most recent search criteria submitted by the user.
+     * @type {{api: string, size: number}}
+     * @property {string} api - The full API request URL used in the last search
+     * @property {number} size - The number of the results requested in the last search.
+     */
+    const lastSearchCriteria = {
+        api: "",
+        size: 0
+    };
 
     /**
      * Book search actions
@@ -40,7 +53,7 @@
      */
     const bookSearchActions = {
         /**
-         * Validate the input as an ISBN number and return the appropriate API URL and SweetAlert configuration.
+         * Validate the input as an ISBN and return the appropriate API URL and SweetAlert configuration.
          */
         isbn: input => {
             const isValidInput = isbnValidator.validate(input).isValid;
@@ -72,7 +85,7 @@
                         title: "Invalid Title",
                         text: "Please enter book title."
                     },
-                apiUrl: `/${encodeURIComponent('_FetchBooksByTitle')}/${encodeURIComponent(input)}`
+                apiUrl: `/_FetchBooksByTitle?title=${input}`
             }
         }
     }
@@ -83,12 +96,58 @@
     let currentSearchBy = "isbn";
 
     /**
-     * Handle dropdown item click event to update the search criteria.
+     * Fetches the paginated book search result as an HTML partial view.
+     * Uses the last search criteria stored in {@link lastSearchCriteria}.
+     * @param {number} page - The page number to fetch. Defaults to 1 if not provided.
+     * @returns {Promise<Response>} The fetch response containing the rendered HTML.
+     */
+    const fetchBookByPage = async page => {
+        let currentPage = page || 1;
+        
+        const { size, api } = lastSearchCriteria;
+
+        return await fetch(`${api}&pagesize=${size}&page=${currentPage}`, {
+            method: "GET",
+            headers: {'Accept': 'text/html'}
+        });
+    };
+
+    /**
+     * Extracts a user-friendly error message from a failed fetch response.
+     * @param {Response} response - The fetch response to evaluate.
+     * @returns {Promise<string>} A descriptive error message, or an empty string if no error.
+     */
+    const getErrorMessageFromResponse = async response => {
+        if(response.ok) return "";
+        
+        const message = await response.text();
+        let errorMessage = "An error occurred while fetching book data.";
+        
+        if(response.status === 400 || response.status === 404)
+            errorMessage = response.status === 400 ? "Bad Request" : "Not found";
+        
+        return errorMessage;
+    };
+
+    /**
+     * Show error message via Sweetalert
+     * @param {string} errorMessage - error message 
+     */
+    const showError = errorMessage => {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: errorMessage
+        });
+    };
+
+    /**
+     * Handle the dropdown item click event to update the search criteria.
      * @param {Event} e - The click event triggered by the dropdown item.
      */
     const handleDropdownClick = e => {
         /**
-         * The dropdown button element thad triggered the clikck event.
+         * The dropdown button element that triggered the click event.
          * @type {HTMLButtonElement}
          */
         const currentBtn = e.currentTarget;
@@ -100,6 +159,8 @@
         btnSearchBy.querySelector("span").textContent = text;
 
         currentSearchBy = (currentBtn.dataset.searchBy || "isbn").toLocaleLowerCase();
+        
+        pageSizeWrapper.classList.toggle(INVISIBLE_CLASS, currentSearchBy === "isbn");
     };
 
     /**
@@ -113,7 +174,6 @@
             loader.classList.remove(INVISIBLE_CLASS);
             const searchTerm = searchInput.value.trim();
 
-            let defaultErrorMessage = "An error occurred while fetching book data.";
             try {
                 const bookSearchAction = bookSearchActions[currentSearchBy];
                 const { passValidation, sweetAlertConfig, apiUrl } = bookSearchAction(searchTerm);
@@ -122,25 +182,16 @@
                     Swal.fire(sweetAlertConfig);
                     return;
                 }
+                
+                let size = parseInt(pageSize.value);
+                lastSearchCriteria.api = apiUrl;
+                lastSearchCriteria.size = isNaN(size) ? 10 : size;
 
-                const response = await fetch(apiUrl, {
-                    method: "GET",
-                    headers: {
-                        'Accept': 'text/html'
-                    }
-                });
+                const response = await fetchBookByPage(1);
 
-                if (!response.ok) {
-                    const message = await response.text();
-
-                    if (response.status === 400 || response.status === 404)
-                        defaultErrorMessage = response.status === 400 ? "Bad Request" : "Book Not Found";
-
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: message || defaultErrorMessage
-                    });
+                const errorMessage = await getErrorMessageFromResponse(response);
+                if(errorMessage) {
+                    showError(errorMessage);
                     return;
                 }
 
@@ -148,11 +199,7 @@
                 searchInput.value = "";
             }
             catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: error.message || defaultErrorMessage
-                });
+                showError(error.message || defaultErrorMessage);
                 console.error("Error fetching book data:", error);
             }
             finally {
@@ -161,6 +208,40 @@
         }
     };
 
+    /**
+     * Handles click events delegated from the pagination container.
+     * @param {Event} e - The click event triggered within the book search result container.
+     */
+    const handlePageBtnClicked = async e => {
+        loader.classList.remove(INVISIBLE_CLASS);
+        try {
+            const btn = e.target.closest("#pagination .btn:not(.disabled):not(.active)");
+            if(!btn) return;
+            
+            const currentPage = parseInt(btn.textContent.trim());
+            if(isNaN(currentPage)) return;
+
+            const response = await fetchBookByPage(currentPage);
+            const errorMessage = await getErrorMessageFromResponse(response);
+            
+            if(errorMessage) {
+                showError(errorMessage);
+                return;
+            }
+
+            bookSearchResult.innerHTML = await response.text();
+            searchInput.value = "";
+        }
+        catch (error) {
+            showError(error.message || defaultErrorMessage)
+            console.error("Error fetching book data:", error);
+        }
+        finally {
+            loader.classList.add(INVISIBLE_CLASS);
+        }
+    };
+    
+    bookSearchResult.addEventListener('click', handlePageBtnClicked);
     searchInput.addEventListener('keyup', handleSearchInputKeyup);
     dropdownBtns.forEach(btn => btn.addEventListener("click", handleDropdownClick));
 })();

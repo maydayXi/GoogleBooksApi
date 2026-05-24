@@ -48,8 +48,6 @@ public class GoogleBookService(IOptions<GoogleBooksOptions> options, ILogger<Goo
     /// </summary>
     private string _originalContent = string.Empty;
 
-    private string _errorMessage = string.Empty;
-
     /// <summary>
     /// Provides JSON serialization options with case-insensitive property name matching.
     /// </summary>
@@ -63,26 +61,26 @@ public class GoogleBookService(IOptions<GoogleBooksOptions> options, ILogger<Goo
         if (string.IsNullOrWhiteSpace(isbn) || !isbn.IsValidIsbn())
             return BadRequestResponse<BookSearchResponseDto>("Invalid ISBN provided. Please provide a valid ISBN-10 or ISBN-13.");
 
-        BookSearchCriteria criteria = BookSearchCriteria.ISBN;
-        string requestUri = $"?q=isbn:{isbn}&key={_options.ApiKey}";
+        const BookSearchCriteria criteria = BookSearchCriteria.ISBN;
+        var requestUri = $"?q=isbn:{isbn}&key={_options.ApiKey}";
         _maskedUrl = $"{_options.BaseUrl}?q=isbn:{isbn}";
 
         try
         {
-            using HttpResponseMessage response = await _httpClient.GetAsync(requestUri);
-            if (!response.IsSuccessStatusCode) return BadGetwayResponse<BookSearchResponseDto>(response.StatusCode);
+            using var response = await _httpClient.GetAsync(requestUri);
+            if (!response.IsSuccessStatusCode) return BadGatewayResponse<BookSearchResponseDto>(response.StatusCode);
 
-            GoogleBooksApiResponseDto? googleBooksApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>(_jsonOptions);
+            var googleBooksApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>(_jsonOptions);
 
             if (googleBooksApiResponse is null || googleBooksApiResponse.TotalItems <= 0 ||
                 googleBooksApiResponse.Items.Count <= 0)
                 return NotFoundResponse<BookSearchResponseDto>(criteria, isbn);
 
-            GoogleBookItemDto? googleBook = googleBooksApiResponse.Items.FirstOrDefault();
-            if (googleBook?.VolumeInfo is null)
-                return NotFoundResponse<BookSearchResponseDto>(criteria, isbn);
-
-            return SuccessResponse(googleBook);
+            var googleBook = googleBooksApiResponse.Items.FirstOrDefault();
+            
+            return googleBook?.VolumeInfo is null
+                ? NotFoundResponse<BookSearchResponseDto>(criteria, isbn) 
+                : SuccessResponse(googleBook, 1);
         }
         catch (Exception ex)
         {
@@ -91,34 +89,37 @@ public class GoogleBookService(IOptions<GoogleBooksOptions> options, ILogger<Goo
         }
     }
 
-    public async Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByTitleAsync(string title)
+    public async Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByQueryAsync(BookQueryDto bookQueryDto)
     {
-        if (string.IsNullOrWhiteSpace(title))
+        if (string.IsNullOrWhiteSpace(bookQueryDto.Title))
             return BadRequestResponse<IEnumerable<BookSearchResponseDto>>(
                 "Title cannot be empty. Please provide a valid book title.");
 
-        BookSearchCriteria criteria = BookSearchCriteria.Title;
-        string requestUrl = $"?q=intitle:{title}&key={_options.ApiKey}";
-        _maskedUrl = $"{_options.BaseUrl}?q=intitle:{title}";
+        if (bookQueryDto.StartIndex < 0) bookQueryDto.StartIndex = 0;
+        if (!Enum.IsDefined(typeof(PageSize), bookQueryDto.MaxResults))
+            bookQueryDto.MaxResults = (int)PageSize.Ten;
+
+        const BookSearchCriteria criteria = BookSearchCriteria.Title;
+        var requestUrl = $"?q=intitle:{bookQueryDto.Title}&startIndex={bookQueryDto.StartIndex}&maxResults={bookQueryDto.MaxResults}&key={_options.ApiKey}";
+        _maskedUrl = $"{_options.BaseUrl}?q=intitle:{bookQueryDto.Title}";
 
         try
         {
-            using HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+            using var response = await _httpClient.GetAsync(requestUrl);
             if (!response.IsSuccessStatusCode)
-                return BadGetwayResponse<IEnumerable<BookSearchResponseDto>>(response.StatusCode);
+                return BadGatewayResponse<IEnumerable<BookSearchResponseDto>>(response.StatusCode);
 
             _originalContent = await response.Content.ReadAsStringAsync();
-            GoogleBooksApiResponseDto? googleBookApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>();
+            var googleBookApiResponse = await response.Content.ReadFromJsonAsync<GoogleBooksApiResponseDto>();
 
             if (googleBookApiResponse is null || googleBookApiResponse.TotalItems <= 0 ||
                 googleBookApiResponse.Items.Count <= 0)
-                return NotFoundResponse<IEnumerable<BookSearchResponseDto>>(criteria, title);
+                return NotFoundResponse<IEnumerable<BookSearchResponseDto>>(criteria, bookQueryDto.Title);
 
-            return SuccessResponse(googleBookApiResponse.Items);
+            return SuccessResponse(googleBookApiResponse.Items, googleBookApiResponse.TotalItems);
         }
         catch (JsonException jsonEx)
         {
-            _errorMessage = $"Failed to deserialize Google Books API response.\nRequest Url: {_maskedUrl}Json Path: {jsonEx.Path}\nLine Number: {jsonEx.LineNumber}\nByte Position in Line: {jsonEx.BytePositionInLine}\nOriginal Content: {_originalContent}";
             _logger.LogError(jsonEx,
                 "Failed to deserialize Google Books API response.\nRequestUrl: {RequestUrl}\nJson Path: {JsonPath}\nLine Number: {LineNumber}\nByte Position in Line: {BytePositionInLine}\nOriginal Content: {OriginalContent}",
                 _maskedUrl, jsonEx.Path, jsonEx.LineNumber, jsonEx.BytePositionInLine, _originalContent

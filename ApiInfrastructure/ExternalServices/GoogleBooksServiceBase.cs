@@ -12,37 +12,41 @@ namespace ApiInfrastructure.ExternalServices;
 /// Base class for Google Books services, providing factory methods for constructing
 /// standardized <see cref="ApiResponse{T}"/> results for common HTTP outcomes.
 /// </summary>
-public class GoogleBooksServiceBase
+public abstract class GoogleBooksServiceBase
 {
     /// <summary>
     /// Creates a successful <see cref="ApiResponse{T}"/> containing the book data retrieved from the Google Books API.
     /// </summary>
     /// <param name="book">The <see cref="GoogleBookItemDto"/> returned by the Google Books API.</param>
+    /// <param name="totalBooks">The total number of books</param>
     /// <returns>
     /// An <see cref="ApiResponse{T}"/> with <see cref="HttpStatusCode.OK"/>,
     /// <see cref="ApiResponseStatus.GoogleBooksApiSuccess"/> and the mapped <see cref="BookSearchResponseDto"/>.
     /// </returns>
-    protected static ApiResponse<BookSearchResponseDto> SuccessResponse(GoogleBookItemDto book) => new()
+    protected static ApiResponse<BookSearchResponseDto> SuccessResponse(GoogleBookItemDto book, int totalBooks = 0) => new()
     {
         IsSuccess = true,
         HttpStatusCode = (int)HttpStatusCode.OK,
         ApiResponseStatus = ApiResponseStatus.GoogleBooksApiSuccess,
         Message = "Book data retrieved successfully.",
         Data = book.ToBookSearchResponse(),
+        TotalBooks = totalBooks
     };
 
     /// <summary>
     /// Creates a successful API response containing a collection of book search results mapped from Google Books API items.
     /// </summary>
     /// <param name="books">The collection of Google Books API items to map to the response.</param>
+    /// <param name="totalBooks">The number of books</param>
     /// <returns>An ApiResponse containing the mapped book search results and a success status.</returns>
-    protected static ApiResponse<IEnumerable<BookSearchResponseDto>> SuccessResponse(IEnumerable<GoogleBookItemDto> books) => new()
+    protected static ApiResponse<IEnumerable<BookSearchResponseDto>> SuccessResponse(IEnumerable<GoogleBookItemDto> books, int totalBooks = 0) => new()
     {
         IsSuccess = true,
         HttpStatusCode = (int)HttpStatusCode.OK,
         ApiResponseStatus = ApiResponseStatus.GoogleBooksApiSuccess,
         Message = "Books data retrieved successfully.",
         Data = books.Select(b => b.ToBookSearchResponse()),
+        TotalBooks = totalBooks
     };
 
     /// <summary>
@@ -68,7 +72,7 @@ public class GoogleBooksServiceBase
     /// <returns>
     /// An <see cref="ApiResponse{T}"/> with the upstream <paramref name="httpStatusCode"/> and <see cref="ApiResponseStatus.GoogleBooksApiError"/>.
     /// </returns>
-    protected static ApiResponse<T> BadGetwayResponse<T>(HttpStatusCode httpStatusCode) where T : class => new()
+    protected static ApiResponse<T> BadGatewayResponse<T>(HttpStatusCode httpStatusCode) where T : class => new()
     {
         IsSuccess = false,
         HttpStatusCode = (int)httpStatusCode,
@@ -81,7 +85,7 @@ public class GoogleBooksServiceBase
     /// Creates a not found <see cref="ApiResponse{T}"/> indicating that no book was found for the specified ISBN.
     /// </summary>
     /// <param name="criteria">The search criteria used for the book search (e.g., ISBN or Title).</param>
-    /// <param name="isbn">The ISBN that yielded no results from the Google Books API.</param>
+    /// <param name="input">The criteria for user search</param>
     /// <returns>
     /// An <see cref="ApiResponse{T}"/> with <see cref="HttpStatusCode.NotFound"/> and <see cref="ApiResponseStatus.BookNotFound"/>.
     /// </returns>

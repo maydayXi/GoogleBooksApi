@@ -18,10 +18,10 @@ public interface IGoogleBookService
     /// <summary>
     /// Asynchronously retrieves a collection of books matching the specified title.
     /// </summary>
-    /// <param name="title">The title to search for.</param>
+    /// <param name="bookQuery">The query parameters used to filter and paginate the book search results.</param>
     /// <returns>
     /// A task that represents the asynchronous operation. 
     /// The task result contains a collection of matching books.
     /// </returns>
-    Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByTitleAsync(string title);
+    Task<ApiResponse<IEnumerable<BookSearchResponseDto>>> FetchBooksByQueryAsync(BookQueryDto bookQuery);
 }

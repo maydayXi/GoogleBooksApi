@@ -34,7 +34,8 @@ public static class ResponseDataExtension
     /// <summary>
     /// Convert a collection of BookSearchResponseDto objects to a collection of BookVm objects.
     /// </summary>
-    /// <param name="books">The books response data transfer object to convert.</param>
+    /// <param name="books">The book response data transfer object to convert.</param>
     /// <returns>A collection of Book view models representing the book information.</returns>
-    public static IEnumerable<BookVm> ToBooksViewModel(this IEnumerable<BookSearchResponseDto> books) => books.Select(book => book.ToBookViewModel());
+    public static IEnumerable<BookVm> ToBooksViewModel(this IEnumerable<BookSearchResponseDto> books) => 
+        books.Select(book => book.ToBookViewModel());
 }

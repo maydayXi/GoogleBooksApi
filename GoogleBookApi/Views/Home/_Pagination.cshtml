@@ -1,0 +1,66 @@
+@using GoogleBookApi.ViewModels.Components
+@model PaginationVm
+
+@{
+    const int range = 5;
+    
+    int start = Math.Max(2, Model.CurrentPage - range),
+        end = Math.Min(Model.TotalPage - 1, Model.CurrentPage + range);
+
+    bool isFirstPage = Model.CurrentPage == 1,
+        isLastPage = Model.CurrentPage == Model.TotalPage;
+
+    const string active = $"{nameof(active)} shadow-sm";
+
+    string 
+        firstActive = isFirstPage
+            ? active
+            : string.Empty,
+        lastActive = isLastPage
+            ? active
+            : string.Empty;
+}
+
+@if (Model.HasData)
+{
+    <div id="pagination" class="d-flex w-75 mx-auto justify-content-center text-body-secondary my-4">
+        @if (Model is { HasPreviousPage: true, CurrentPage: > 1 })
+        {
+            <button id="btn-previous-page" class="btn">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+        }
+        
+        @* 永遠顯示第一頁 *@
+        <button class="btn @firstActive">1</button>
+        
+        @if (Model.CurrentPage > 2)
+        {
+            <span class="btn disabled border-0">...</span>
+        }
+        
+        @for (var page = start; page <= end; page++)
+        {
+            var isCurrentPage = Model.CurrentPage == page;
+            
+            <button class="btn @(isCurrentPage ? active : string.Empty)">
+                @(page)
+            </button>
+        }
+        
+        @if (end < Model.TotalPage - 1)
+        {
+            <span class="btn disabled border-0">...</span>
+        }
+        
+        @* 永遠顯示最後一頁 *@
+        <button class="btn @lastActive">@(Model.TotalPage)</button>
+        
+        @if (Model.HasNextPage)
+        {
+            <button id="btn-next-page" class="btn">
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        }
+    </div>
+}

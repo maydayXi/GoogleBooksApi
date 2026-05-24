@@ -6,17 +6,17 @@ namespace GoogleBookApi.Helper;
 /// <summary>
 /// Provides helper methods.
 /// </summary>
-public class WebHelper
+public static class WebHelper
 {
     /// <summary>
     /// Gets the relative file path to the guideline JSON file.
     /// </summary>
-    public static string GuidelineJsonFilePath => @"data\guideline.json";
+    public static string GuidelineJsonFilePath => "guideline.json";
 
     /// <summary>
     /// Gets the relative file path to the version.json data file.
     /// </summary>
-    public static string VersionJsonFilePath => @"data\version.json";
+    public static string VersionJsonFilePath => "version.json";
 
     /// <summary>
     /// Gets the icon class for a dropdown item based on the specified book search criteria.
@@ -52,4 +52,18 @@ public class WebHelper
         bookIdentifier.TryGetValue(BookIdentifierType.ISBN_13, out string? isbn13);
         return (isbn10 ?? string.Empty, isbn13 ?? string.Empty);
     }
+    
+    /// <summary>
+    /// Calculates the total number of pages based on the page size and total item count.
+    /// capped at a maximum of 200 items to compensate for the Google Books API's
+    /// inaccurate <c>totalItems</c> value.
+    /// </summary>
+    /// <param name="pageSize">The number of items displayed per page. Must be greater than zero.</param>
+    /// <param name="totalBooks">
+    /// The total number of items reported by the API.
+    /// Values exceeding 200 are clamped to 200 before calculating the page count.
+    /// </param>
+    /// <returns>The total number of pages required to display all items.</returns>
+    public static int CalculatePages(int pageSize, int totalBooks) =>
+        (Math.Min(totalBooks, 200) + pageSize - 1) / pageSize;
 }

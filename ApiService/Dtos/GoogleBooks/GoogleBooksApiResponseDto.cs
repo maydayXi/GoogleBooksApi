@@ -12,15 +12,15 @@ public class GoogleBooksApiResponseDto
     /// Gets or sets the resource type identifier.
     /// </summary>
     [JsonPropertyName("kind")]
-    public required string Kind { get; set; }
+    public required string Kind { get; init; }
     /// <summary>
     /// Gets or sets the total number of items.
     /// </summary>
     [JsonPropertyName("totalItems")]
-    public int TotalItems { get; set; }
+    public int TotalItems { get; init; }
     /// <summary>
     /// Google Books API response items, representing individual book entries.
     /// </summary>
     [JsonPropertyName("items")]
-    public List<GoogleBookItemDto> Items { get; set; } = [];
+    public List<GoogleBookItemDto> Items { get; init; } = [];
 }

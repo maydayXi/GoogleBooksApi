@@ -16,6 +16,11 @@ public class AppDataProvider<T>(IWebHostEnvironment webHostEnvironment) : IJsonD
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
     /// <summary>
+    /// JSON data folder
+    /// </summary>
+    private const string JsonDataFolder = "data";
+    
+    /// <summary>
     /// Provides JSON serialization options with case-insensitive property name matching.
     /// </summary>
     private readonly JsonSerializerOptions _jsonOptions = new()
@@ -26,23 +31,19 @@ public class AppDataProvider<T>(IWebHostEnvironment webHostEnvironment) : IJsonD
     /// <summary>
     /// Gets a list of data of type T from a JSON file located at the specified filepath.    
     /// </summary>
-    /// <param name="filepath">The relative path to the JSON file.</param>
+    /// <param name="filename">The relative path to the JSON file.</param>
     /// <returns>A read-only list of data of type T.</returns>
-    public IReadOnlyList<T> GetListDataFromJson(string filepath)
+    public IReadOnlyList<T> GetListDataFromJson(string filename)
     {
-        string fullFilePath = Path.Combine(_webHostEnvironment.WebRootPath, filepath);
-        if (string.IsNullOrWhiteSpace(filepath) || !File.Exists(fullFilePath)) return [];
+        if (!filename.Contains(".json"))
+            filename += ".json";
+        
+        string fullFilePath = Path.Combine(_webHostEnvironment.WebRootPath, JsonDataFolder, filename);
+        if (string.IsNullOrWhiteSpace(filename) || !File.Exists(fullFilePath)) return [];
 
         string json = File.ReadAllText(fullFilePath);
         if (string.IsNullOrWhiteSpace(json)) return [];
 
-        try
-        {
-            return JsonSerializer.Deserialize<List<T>>(json, _jsonOptions) ?? [];
-        }
-        catch
-        {
-            throw;
-        }
+        return JsonSerializer.Deserialize<List<T>>(json, _jsonOptions) ?? [];
     }
 }

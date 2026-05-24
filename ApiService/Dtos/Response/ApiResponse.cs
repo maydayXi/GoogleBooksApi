@@ -13,12 +13,12 @@ public class ApiResponse<T>
     /// <remarks>
     /// A value of true indicates a successful request, while false indicates a failure.
     /// </remarks>
-    public bool IsSuccess { get; set; }
+    public bool IsSuccess { get; init; }
 
     /// <summary>
     /// Numeric HTTP status code returned by the API endpoint.
     /// </summary>
-    public int HttpStatusCode { get; set; }
+    public int HttpStatusCode { get; init; }
 
     /// <summary>
     /// API response status indicating the overall outcome of the API request
@@ -28,11 +28,15 @@ public class ApiResponse<T>
     /// <summary>
     /// Response message providing additional information about the API response, such as error details or success messages.
     /// </summary>
-    public string Message
-    { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// The total number of books.
+    /// </summary>
+    public int TotalBooks { get; init; }
 
     /// <summary>
     /// Response data of generic type T
     /// </summary>
-    public T? Data { get; set; }
+    public T? Data { get; init; }
 }

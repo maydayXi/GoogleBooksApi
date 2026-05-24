@@ -10,22 +10,19 @@ using GoogleBookApi.ViewModels;
 using GoogleBookApi.ViewModels.Components;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.VisualBasic;
 
 namespace GoogleBookApi.Controllers;
 
 /// <summary>
 /// Controller for handling requests related to the application's home and informational pages.
 /// </summary>
-/// <param name="logger">The logger used to record application events.</param>
 /// <param name="googleBookService">The service responsible for handling Google Books operations.</param>
-public class HomeController(ILogger<HomeController> logger, IGoogleBookService googleBookService,
-    IJsonDataProvider<VersionItemVm> versionDataProvider, IJsonDataProvider<GuidelineItemVm> guidelineDataProvider)
-    : Controller
+/// <param name="versionDataProvider">The data provider used to retrieve version history from a JSON source.</param>
+/// <param name="guidelineDataProvider">The data provider used to retrieve guideline from a JSON source.</param>
+public class HomeController(IGoogleBookService googleBookService, IJsonDataProvider<VersionItemVm> versionDataProvider, 
+    IJsonDataProvider<GuidelineItemVm> guidelineDataProvider) : Controller
 {
-    /// <summary>
-    /// Provides logging capabilities for the HomeController.
-    /// </summary>
-    private readonly ILogger<HomeController> _logger = logger;
 
     /// <summary>
     /// Google Book service for fetching book information.
@@ -72,7 +69,7 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
         return View(new BookSearchVm
         {
             DropdownItems = [.. Enum.GetValues<BookSearchCriteria>()
-                .Where(criteria => criteria == BookSearchCriteria.ISBN || criteria == BookSearchCriteria.Title)
+                .Where(criteria => criteria is BookSearchCriteria.ISBN or BookSearchCriteria.Title)
                 .Select(criteria => new DropdownItemVm
                 {
                     Icon = WebHelper.GetDropdownItemIconByCriteria(criteria),
@@ -97,28 +94,47 @@ public class HomeController(ILogger<HomeController> logger, IGoogleBookService g
         if (!bookResponse.IsSuccess)
             return StatusCode(bookResponse.HttpStatusCode, bookResponse);
 
-        BookSearchResponseDto book = bookResponse.Data!;
+        var book = bookResponse.Data ?? new BookSearchResponseDto();
         return PartialView(book.ToBookViewModel());
     }
 
     /// <summary>
     /// Fetches book information based on the provided title and returns a partial view with the results.
     /// </summary>
-    /// <param name="title">The title of the book to retrieve.</param>
+    /// <param name="bookSearchRequest">The search request containing the title and pagination parameters.</param>
     /// <returns>An <see cref="IActionResult"/> containing the book information if found; otherwise, a NotFound or BadRequest result.</returns>
-    [HttpGet($"/{nameof(_FetchBooksByTitle)}/{{title}}")]
-    public async Task<IActionResult> _FetchBooksByTitle([FromRoute] string title)
+    [HttpGet($"/{nameof(_FetchBooksByTitle)}")]
+    public async Task<IActionResult> _FetchBooksByTitle([FromQuery] BookSearchRequest bookSearchRequest)
     {
-        if (string.IsNullOrWhiteSpace(title)) return BadRequest("Title cannot be null or empty.");
-
-        ApiResponse<IEnumerable<BookSearchResponseDto>> booksResponse = await _googleBookService.FetchBooksByTitleAsync(title);
+        if (string.IsNullOrWhiteSpace(bookSearchRequest.Title)) 
+            return BadRequest("Title cannot be null or empty.");
+        
+        var booksResponse = await _googleBookService.FetchBooksByQueryAsync(
+            bookSearchRequest.ToBookQuery());
 
         if (!booksResponse.IsSuccess)
             return StatusCode(booksResponse.HttpStatusCode, booksResponse);
 
-        IEnumerable<BookSearchResponseDto> books = booksResponse.Data!;
-        IEnumerable<BookVm> bookVms = books.ToBooksViewModel();
-        return PartialView(bookVms);
+        var books = booksResponse.Data ?? [];
+        var bookVms = books.ToBooksViewModel();
+
+        var hasBooks = booksResponse.TotalBooks > 0;
+        
+        var pagination = new PaginationVm
+        {
+            TotalPage = hasBooks 
+                ? WebHelper.CalculatePages((int)bookSearchRequest.PageSize, booksResponse.TotalBooks)
+                : 0,
+            CurrentPage = hasBooks
+                ? bookSearchRequest.Page
+                : 0
+        };
+
+        return PartialView(new BookSearchResultVm
+        {
+            Books = [.. bookVms],
+            Pagination = pagination
+        });
     }
 
     /// <summary>

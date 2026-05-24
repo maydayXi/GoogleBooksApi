@@ -2,7 +2,7 @@
     {
         "version": "1.2.5",
         "description": "Fix: improve Google Books response handling and add Serilog logging",
-        "releaseDAte": "2026-05-18"
+        "releasedDAte": "2026-05-18"
     },
     {
         "version": "1.2.4",
