@@ -39,6 +39,24 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.4.0
+
+refactor(search-js): decouple event handling and split into modular ES6 architecture
+- Split monolithic book-search.js into focused ES6 modules (SRP)
+
+- Add `validator.js`: pure ISBN and title validation functions.
+- Add `search-strategies.js`: strategy registry mapping search type keys to validate/buildUrl pairs.
+- Add `api-service.js`: centralise all HTTP communication.
+- Add `search-ui-service.js` (UiService): centralise all DOM read/write operations.
+- Add `SearchController.js`: orchestrates search flow by coordinating strategies, API, UI, and alert modules.
+- Migrate all event handlers from inline IIFE to SearchController class methods
+- Migrate fetch logic from inline callbacks to `api-service.js` (fetchPage, resolveErrorMessage)
+- Migrate SweetAlert2 calls to `alert.js` (alertValidationError, alertError)
+- Migrate ISBN/title validation to `validator.js`
+- Migrate search strategy URL building to `search-strategies.js`
+
+Release date: 2026-05-25
+
 ### 1.3.0
 
 feature: Add pagination support for book title search (v1.3.0)
@@ -127,9 +145,9 @@ Release date: 2026-05-02
 
 ### 1.0.0
 
-Initail release - Support searching book information by ISBN
+Initial release – Support searching book information by ISBN
 
-Realeased date: 2026-05-01
+Released date: 2026-05-01
 
 ## Notes 
 
