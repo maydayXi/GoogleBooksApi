@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /_FetchBookByIsbn/
+Disallow: /_FetchBooksByTitle
+Allow: /
+
+Sitemap: https://book-search.azurewebsites.net/xitemap.xml

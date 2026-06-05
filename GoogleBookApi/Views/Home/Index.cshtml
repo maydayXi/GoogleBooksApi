@@ -1,13 +1,20 @@
 ﻿@using GoogleBookApi.Controllers
 @{
     ViewData["Title"] = "Home Page";
+    ViewData["Description"] = "使用 Google Books API 搜尋書籍 ISBN 及書名，快速取得出版社、作者、描述等詳細資訊"; 
+}
+
+@section Preload
+{
+    <link rel="preload" as="image" href="~/image/banner.svg" type="image/svg+xml"/>
 }
 
 <section id="banner">
     <div class="row gx-2">
         <div class="col-md-4 align-middle align-self-center text-end">
             <h1 class="text-end fw-bolder mb-3">
-                查詢 Google Books <br />書籍基本資料
+                搜詢 Google Books <br />
+                <span class="text-muted fs-5">查詢書籍 ISBN、作者、出版社資料</span>
             </h1>
             <a href="@Url.Action(nameof(HomeController.Guideline))" class="btn shadow-sm btn-outline-danger">
                 See more
@@ -15,7 +22,7 @@
             </a>
         </div>
         <div class="col-md-8 text-center">
-            <img src="image/banner.svg" class="img-fluid w-50" alt="Banner Image" />
+            <img src="~/image/banner.svg" class="img-fluid w-50" alt="Banner Image" />
         </div>
     </div>
 </section>

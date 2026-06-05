@@ -2,12 +2,16 @@
 @model BookVm
 
 @{
-    // Image style for book cover
-    string imageStyle = $"background-image: url({Model.ImageLink})";
+    string defaultImage = 
+        $"https://placehold.co/128x198/fdfdf2/d26e4d?text={Model.Title}";
 }
 
 <div class="card shadow border-0 h-100 pt-2 mb-3" aria-label="Book Search Result">
-    <div class="d-inline-block book-image" style="@imageStyle" aria-label="Book Cover"></div>
+    <div class="d-flex justify-content-center align-items-center overflow-hidden book-image-wrapper">
+        <img src="@Model.ImageLink" class="book-image" alt="@Model.Title Cover"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='@defaultImage'"/>
+    </div>
     <div class="card-body">
         <h5 class="card-title fw-bold mb-3 book-title">@Model.Title</h5>
         <h6 class="card-subtitle fw-bold text-muted mb-3 book-subtitle">

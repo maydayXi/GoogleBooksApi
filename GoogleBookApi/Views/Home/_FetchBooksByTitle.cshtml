@@ -10,5 +10,11 @@
     }
 </div>
 
-<partial name="_Pagination" model="@Model.Pagination"/>
+<partial name="_Pagination" model="@Model.Pagination" />
 
+@if (!string.IsNullOrWhiteSpace(Model.JsonLd))
+{
+    <script type="application/ld+json">
+         @Html.Raw(Model.JsonLd)
+    </script>
+}

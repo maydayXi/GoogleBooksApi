@@ -10,7 +10,8 @@ using GoogleBookApi.ViewModels;
 using GoogleBookApi.ViewModels.Components;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Microsoft.VisualBasic;
+using System.Text.Json;
+using GoogleBookApi.ViewModels.JSONLD;
 
 namespace GoogleBookApi.Controllers;
 
@@ -130,10 +131,22 @@ public class HomeController(IGoogleBookService googleBookService, IJsonDataProvi
                 : 0
         };
 
+        List<BookVm> result = [..bookVms];
+
+        var jsonLd = !hasBooks
+            ? string.Empty
+            : JsonSerializer.Serialize(new Dictionary<string, object>()
+            {
+                ["@context"] = "https://schema.org",
+                ["@type"] = $"{nameof(ItemList)}",
+                ["itemListElement"] = result.ToSchemaItemList().ItemListElement
+            }, WebHelper.GetJsonSerializerOptions());
+        
         return PartialView(new BookSearchResultVm
         {
-            Books = [.. bookVms],
-            Pagination = pagination
+            Books = result,
+            Pagination = pagination,
+            JsonLd = jsonLd
         });
     }
 

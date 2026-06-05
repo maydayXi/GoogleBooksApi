@@ -23,7 +23,7 @@
 
 @if (Model.HasData)
 {
-    <div id="pagination" class="d-flex w-75 mx-auto justify-content-center text-body-secondary my-4">
+    <div id="pagination" class="d-flex w-75 mx-auto justify-content-center text-body-secondary my-4 mb-5">
         @if (Model is { HasPreviousPage: true, CurrentPage: > 1 })
         {
             <button id="btn-previous-page" class="btn">

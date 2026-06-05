@@ -37,5 +37,6 @@ public static class ResponseDataExtension
     /// <param name="books">The book response data transfer object to convert.</param>
     /// <returns>A collection of Book view models representing the book information.</returns>
     public static IEnumerable<BookVm> ToBooksViewModel(this IEnumerable<BookSearchResponseDto> books) => 
-        books.Select(book => book.ToBookViewModel());
+        books.Where(book => !string.IsNullOrWhiteSpace(book.Title))
+            .Select(book => book.ToBookViewModel());
 }

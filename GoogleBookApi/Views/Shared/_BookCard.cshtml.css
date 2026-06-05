@@ -2,12 +2,16 @@
     background: #fdf6f2;
 }
 
-    .card .book-image {
+    .card .book-image-wrapper {
         height: 198px;
         max-height: 248px;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
+    }
+    
+    .card .book-image-wrapper .book-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
     }
 
     .card .book-title {

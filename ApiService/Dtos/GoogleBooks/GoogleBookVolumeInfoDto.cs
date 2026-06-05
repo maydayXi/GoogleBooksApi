@@ -12,7 +12,7 @@ public class GoogleBookVolumeInfoDto
     /// Title of the book, representing the main title or name of the book as provided by the Google Books API.
     /// </summary>
     [JsonPropertyName("title")]
-    public required string Title { get; set; }
+    public string Title { get; init; } = string.Empty;
 
     /// <summary>
     /// Book authors, representing the list of authors associated with the book as provided by the Google Books API.

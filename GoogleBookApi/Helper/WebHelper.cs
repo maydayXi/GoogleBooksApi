@@ -1,4 +1,7 @@
-﻿using ApiService.Enums;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using ApiService.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoogleBookApi.Helper;
@@ -66,4 +69,15 @@ public static class WebHelper
     /// <returns>The total number of pages required to display all items.</returns>
     public static int CalculatePages(int pageSize, int totalBooks) =>
         (Math.Min(totalBooks, 200) + pageSize - 1) / pageSize;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public static JsonSerializerOptions GetJsonSerializerOptions() => new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        WriteIndented = false,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = null
+    };
 }
