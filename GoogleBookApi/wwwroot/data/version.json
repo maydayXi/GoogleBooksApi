@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.5.0",
+        "description": "Feature: enhance SEO metadata and site discoverability",
+        "releasedDate": "2026-06-06"
+    },
+    {
+        "version": "1.4.0",
+        "description": "Refactor: decouple event handling and split into modular ES6 architecture",
+        "releasedDate": "2026-05-25"
+    },
+    {
         "version": "1.3.0",
         "description": "Feature: Add pagination support for book title search",
         "releasedDate": "2026-05-24"

@@ -39,6 +39,19 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.5.0
+
+feat: enhance SEO metadata and site discoverability
+
+- Add canonical URL tags to prevent duplicate content
+- Add Open Graph and Twitter Card meta tags
+- Add Schema.org JSON-LD structured data (ItemList, Book)
+- Add sitemap.xml generation via SitemapController with IMemoryCache
+- Add robots.txt
+- Add favicon, apple-touch-icon, and web app manifest icons
+
+Release date: 2026-06-06
+
 ### 1.4.0
 
 refactor(search-js): decouple event handling and split into modular ES6 architecture
