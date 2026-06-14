@@ -59,6 +59,12 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.6.1
+
+fix(search): resolve ISBN search returning not found(404) results.
+
+Release date: 2026-06-15
+
 ### 1.6.0 
 
 style: redesign UI across all pages.
