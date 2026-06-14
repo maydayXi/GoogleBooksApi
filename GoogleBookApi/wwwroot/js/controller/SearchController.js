@@ -1,5 +1,5 @@
 import { getStrategy } from "../book-search/search-strategies.js";
-import { fetchPage, resolveErrorMessage } from "../service/api-service.js";
+import { fetchBook, fetchPage, resolveErrorMessage} from "../service/api-service.js";
 import { alertValidationError, alertError } from "../util/alert.js";
 
 /**
@@ -81,8 +81,11 @@ export class SearchController {
                 apiUrl: strategy.buildUrl(searchTerm),
                 pageSize: this._ui.getPageSize(),
             };
-
-            await this._loadPage(1);
+            
+            this._currentStrategyKey !== "isbn"
+                ? await this._loadPage(1)
+                : await this._loadBook(this._lastCriteria.apiUrl);
+            
             this._ui.clearSearchInput();
         } catch (err) {
             alertError(err.message ?? DEFAULT_ERROR_MESSAGE);
@@ -117,6 +120,19 @@ export class SearchController {
     // #endregion
 
     // #region Private Helpers
+    async _loadBook(url) {
+        if(!url) return;
+        
+        const response = await fetchBook(url);
+        const errorMessage = await resolveErrorMessage(response);
+        if(errorMessage) {
+            alertError(errorMessage);
+            return;
+        }
+        
+        this._ui.renderSearchResult(await response.text());
+    }
+    
     /**
      * Fetches a result page and renders it, or shows an error.
      * @param {number} page The one-based page number to fetch.

@@ -19,6 +19,17 @@ const statusMessages = {
  */
 
 /**
+ * Fetches an HTML partial view for given URL.
+ * @param {string} url 
+ * @returns {Promise<Response>}
+ */
+export const fetchBook = async (url) => 
+    fetch(url, {
+        method: "GET",
+        headers: { Accept: "text/html"}
+    });
+
+/**
  * Fetches an HTML partial view for the given page.
  * @param {SearchCriteria} criteria
  * @param {number} [page=1]
