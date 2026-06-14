@@ -1,42 +1,44 @@
 ﻿@using GoogleBookApi.Controllers
-@using GoogleBookApi.ViewModels
 @using GoogleBookApi.ViewModels.Components
 
 @model IEnumerable<VersionItemVm>
 
 @{
     ViewData["Title"] = nameof(HomeController.Version);
+    PageTitleVm pageTitle = new("版本", "系統更新紀錄");
 }
 
-@section Headers {
-    <link rel="stylesheet" href="~/css/version.css" asp-append-version="true" />
-}
+<section data-screen-description="version" id="version">
+    <partial name="_PageTitle" model="@pageTitle"/>
+    <div class="version-list position-relative">
+        <div class="list-time-line position-absolute"></div>
+        @foreach (var versionItem in Model)
+        {
+            var firstItem = versionItem == Model.First()
+                ? "first-item"
+                : string.Empty;
 
-<div class="row justify-content-center align-items-center" id="version">
-    <div class="card shadow my-3 px-0">
-        <div class="card-header bg-secondary fw-bolder">
-            <i class="bi bi-git me-2"></i>
-            VERSION INFO
-        </div>
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                @foreach (VersionItemVm versionItem in Model)
-                {
-                    <li class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-0 text-secondary-emphasis fw-bold">
-                                @versionItem.Version
-                            </h5>
-                            <small class="badge rounded-pill text-bg-success align-self-baseline shadow-sm">
-                                @versionItem.ReleasedDate.ToString("yyyy-MM-dd")
-                            </small>
-                        </div>
-                        <p class="mt-2 version-description text-secondary">
-                            @versionItem.Description
-                        </p>
-                    </li>
-                }
-            </ul>
-        </div>
+            <div class="list-item position-relative">
+                <div class="position-absolute rounded-circle z-1 @firstItem"></div>
+                <div class="version-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="version-number fw-bold">
+                            @versionItem.Version
+                        </span>
+                        <span class="released-date @firstItem">
+                            @versionItem.ReleasedDate
+                        </span>
+                    </div>
+                    <p>
+                        @versionItem.Description
+                    </p>
+                </div>
+            </div>
+        }
+
+        <a href="https://github.com/maydayXi/GoogleBooksApi" target="_blank"
+           class="btn btn-see-more text-white shadow-sm">
+            <i class="bi bi-github me-2"></i>GitHub
+        </a>
     </div>
-</div>
+</section>

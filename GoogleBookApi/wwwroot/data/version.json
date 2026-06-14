@@ -1,5 +1,10 @@
 [
     {
+        "version": "1.6.0",
+        "description": "Style: redesign UI across all pages.",
+        "releasedDate": "2026-06-14"
+    },
+    {
         "version": "1.5.0",
         "description": "Feature: enhance SEO metadata and site discoverability",
         "releasedDate": "2026-06-06"

@@ -1,7 +1,99 @@
-﻿#version .card-header {
-    color: #e4ab63;
+﻿#version {
+    padding: var(--section-padding);
 }
-/*
-#version .version-description {
-    color: #cc5933;
-}*/
+
+#version .version-list {
+    padding-left: 2rem;
+}
+
+#version .version-list .list-time-line {
+    left: 9px;
+    top: 1rem;
+    bottom: 1rem;
+    width: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    background: linear-gradient(rgb(var(--color-brand-rgb)) 0%, 
+        rgb(var(--color-border-muted-rgb)) 100%);    
+}
+
+#version .version-list .list-item {
+    margin-bottom: 1.25rem;
+}
+
+#version .version-list .list-item .rounded-circle {
+    left: -25px;
+    top: 7px;
+    width: .875rem;
+    height: .875rem;
+}
+
+#version .version-list .list-item .rounded-circle {
+    background: rgb(var(--color-border-primary-rgb));
+    border: 2.5px solid rgb(var(--color-border-muted-rgb));
+}
+
+#version .version-list .list-item .rounded-circle.first-item {
+    background: var(--color-brand) !important;
+    border: 2px solid var(--color-brand) !important;
+}
+
+#version .version-list .list-item .version-card {
+    -webkit-border-radius: .75rem;
+    border-radius: .75rem;
+    padding: 18px 22px;
+    border: 1px solid rgb(var(--color-border-primary-rgb));
+    background: var(--color-surface-card);
+    box-shadow: rgba(var(--color-box-shadow-primary-rgba)) 0 1px 5px;
+}
+
+#version .version-list .list-item .version-card div:first-child {
+    gap: 12px;
+    margin-bottom: 9px;
+}
+
+#version .version-list .list-item .version-card .version-number {
+    font-family: "Noto Serif TC", Georgia, serif;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+
+#version .version-list .list-item .version-card .released-date {
+    font-size: .75rem;
+    padding: .25rem .75rem;
+    -webkit-border-radius: 1.25rem;
+    border-radius: 1.25rem;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+#version .version-list .list-item .version-card .released-date {
+    background: var(--color-surface-card-raised);
+    color: var(--color-text-muted);
+}
+
+#version .version-list .list-item .version-card .released-date.first-item {
+    background: var(--color-surface) !important;
+    color: var(--color-brand) !important;
+}
+
+#version .version-list .list-item .version-card p {
+    font-size: .875rem;
+    line-height: 1.72;
+    color: var(--color-text-secondary);
+}
+
+#version .btn-see-more {
+    background: var(--color-brand);
+    padding: 11px 26px;
+    font-weight: 600;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    border-color: var(--color-brand);
+    border-width: medium;
+    border-style: none;
+}
+
+#version .btn-see-more:hover {
+    filter: brightness(.88);
+}

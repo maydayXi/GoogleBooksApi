@@ -1,0 +1,79 @@
+#banner {
+    max-width: 1200px;
+    padding: 56px 24px 72px;
+}
+
+#banner .row h1 {
+    color: var(--color-text-primary);
+    font-family: "Noto Serif TC", Georgia, serif;
+    line-height: 1.22;
+    letter-spacing: -.025em;
+    margin-top: 1.75rem;
+    margin-bottom: 1.225rem;
+    font-size: clamp(28px, 4vw, 46px);
+}
+
+#banner .row h1 span {
+    color: var(--color-brand);
+}
+
+#banner .row p {
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+    max-width: 420px;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+#banner .row .btn-row {
+    gap: 12px;
+    margin-bottom: 52px;
+}
+
+#banner .row .btn-row a {
+    font-size: 14px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    padding: 11px 26px;
+    font-weight: 600;
+    border-color: var(--color-brand);
+    border-width: medium;
+    border-style: none;
+}
+
+#banner .row .btn-row .btn-guideline {
+    background: var(--color-brand);
+}
+
+#banner .row .btn-row .btn-guideline:hover {
+    filter: brightness(.88);
+}
+
+#banner .row .btn-row .btn-start {
+    border: 1.5px solid var(--color-brand);
+    background: transparent;
+    color: var(--color-brand);
+    transition: 180ms;
+}
+
+#banner .row .btn-row .btn-start:hover {
+    background: var(--color-surface);
+}
+
+#banner .row .stats {
+    border-top: 1px solid rgb(var(--color-border-primary-rgb));
+    padding-top: 2rem;
+    gap: 2rem;
+}
+
+#banner .row .stats div:first-child {
+    color: var(--color-text-primary);
+}
+
+#banner .row .stats div:last-child {
+    color: var(--color-text-muted);
+}
+
+#banner .row .banner-img {
+    max-width: 480px;
+}

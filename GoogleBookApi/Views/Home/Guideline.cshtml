@@ -6,25 +6,25 @@
 
 @{
     ViewData["Title"] = nameof(HomeController.Guideline);
+    PageTitleVm pageTitle = new("使用說明", "如何使用 Google Books 書籍查詢");
 }
 
-@section Headers {
-    <link rel="stylesheet" href="~/css/guideline.css" asp-append-version="true" />
-}
-
-<div class="row justify-content-center align-content-center gy-4 mt-3">
-    @foreach(GuidelineItemVm guideline in Model)
-    {
-        <div class="card col-12 rounded rounded-4 overflow-hidden border-0 px-0">
-            <div class="card-body bg-transparent">
-                <h5 class="card-title py-1 fw-bold">
-                    <i class="@guideline.Icon me-2"></i>
-                    @guideline.Title
-                </h5>
-                <p class="card-text">
-                    @guideline.Description
-                </p>
+<section id="guideline" data-screen-description="guideline">
+    <partial name="_PageTitle" model="@pageTitle" />
+    <div class="d-flex flex-column">
+        @foreach (var guideline in Model)
+        {
+            <div class="guideline-card d-flex align-items-start">
+                <div class="card-icon d-flex justify-content-center align-items-center">
+                    <i class="@guideline.Icon"></i>
+                </div>
+                <div class="card-description">
+                    <h5>@guideline.Title</h5>
+                    <p>
+                        @guideline.Description
+                    </p>
+                </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+</section>

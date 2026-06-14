@@ -1,5 +1,5 @@
 ﻿.card {
-    background: #fdf6f2;
+    background: var(--color-surface-card);
 }
 
     .card .book-image-wrapper {
@@ -15,12 +15,12 @@
     }
 
     .card .book-title {
-        color: #d26e4d;
+        color: var(--color-brand);
     }
 
     .card .book-subtitle,
     .card .list-unstyled {
-        color: #522C2B !important;
+        color: var(--color-text-primary) !important;
     }
 
     .card .card-text:last-child {
@@ -29,4 +29,8 @@
 
     .card .card-footer {
         width: 90%;
+    }
+    
+    #published-date {
+        color: var(--color-text-muted);
     }

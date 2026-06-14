@@ -1,55 +1,139 @@
+:root {
+    
+    /* region Colors */
+    --color-brand: #c86a45;
+    --color-brand-rgb: 200, 106, 69;
+    
+    --color-surface-raised: #fef9f5;
+    --color-surface-raised-rgb: 254, 249, 245;
+    
+    --color-surface: #f4ddd1;
+    --color-surface-rgb: 244, 221, 209;
+    
+    --color-surface-sunken: #f0e5da;
+    --color-surface-sunken-rgb: 240, 229, 218;
+    
+    --color-surface-card-raised: #ede2d8;
+    --color-surface-card-raised-rgb: 237, 226, 216;
+    
+    --color-surface-card: #fdf7f2;
+    --color-surface-card-rgb: 253, 247, 242;
+    
+    --color-text-primary: #3a1f14;
+    --color-text-pirmary-rgb: 58, 31, 20;
+    
+    --color-text-secondary: #6b4030;
+    --color-text-secondary-rgb: 107, 64, 48;
+    
+    --color-text-muted: #9a7060;
+    --color-text-muted-rgb: 154, 112, 96;
+    
+    --color-border-primary-rgb: 236, 229, 231;
+    --color-border-muted-rgb: 221, 208, 196;
+    
+    --color-box-shadow-primary-rgba: 80, 40, 20, .06;
+    --color-box-shadow-secondary-rgba: 80, 40, 20, .07;
+    /* endregion */
+    
+    /* region Sizing */
+    --section-padding: 2.25rem 1.5rem 4.5rem;
+    /* endregion */
+}
+
+/* region Global */
 * {
     position: relative;
     box-sizing: border-box;
 }
 
 html {
+    height: 100vh;
     font-size: 14px;
     position: relative;
-    min-height: 100%;
 }
 
 html, body {
-    background-color: #f7f7f9;
+    /*background-color: var(--color-surface);*/
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body > .container {
+    flex: 1 0 auto;
+}
+/* endregion */
+
+/* region Header */
+header {
+    background: var(--color-surface-raised);
+    border-bottom: 1px solid rgb(var(--color-border-primary-rgb));
+    box-shadow: rgba(var(--color-box-shadow-primary-rgba)) 0 1px 4px;
+}
+
+header nav .navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    font-family: "Noto Sans TC", serif;
+}
+
+header nav .navbar-brand,
+header nav .navbar-brand:hover {
+    color: var(--color-brand);
+}
+
+header nav .nav-item .nav-link {
+    color: var(--color-text-secondary);
+    transition: color .1s;
+    font-weight: 400;
+    padding: .675rem .875rem;
+}
+
+header nav .nav-item .nav-link:hover {
+    color: var(--color-brand);
+}
+
+header nav .nav-item .nav-link.active {
+    font-weight: 700;
+    color: var(--color-brand) !important;
+    border-bottom: 2px solid var(--color-brand) !important;
+}
+
+header nav .navbar-collapse,
+header nav .navbar-collapse .navbar-nav {
+    width: fit-content;
+}
+/* endregion */
 
 .w-20 {
     width: 20% !important;
 }
 
-nav .navbar-brand,
-nav .navbar-brand:hover {
-    color: #ff6a00;
+/* region Book search */
+#book-search > .search-bar > .d-flex > .input-group > .dropdown-menu.show > li > .dropdown-item:hover {
+    background: var(--color-surface);
+    color: var(--color-brand);
 }
 
-#banner h1,
-#banner .btn-outline-danger {
-    color: #ff6a00;
-}
-
-#banner .btn-outline-danger {
-    border-color: #ff6a00;
-}
-
-    #banner .btn-outline-danger:hover {
-        color: white;
-        font-weight: bold;
-        background: #ff6a00;
-    }
-
-#book-search > .input-group > .dropdown-menu.show > li > .dropdown-item:active {
+#book-search > .search-bar > .d-flex > .input-group > .dropdown-menu.show > li > .dropdown-item:active {
     font-weight: bold;
     color: white !important;
-    background: #cac4c1 !important;
+    background: var(--color-surface-raised) !important;
 }
+/* endregion */
 
-/* #region Pagination */
+/* region Pagination */
 #pagination button {
     color: #522C2B;
 }
 
 #pagination button.active {
-    background: #e3ddd9;
+    background: var(--color-brand);
+    color: white;
     border: none;
 }
 
@@ -57,11 +141,28 @@ nav .navbar-brand:hover {
     outline: none !important;
     box-shadow: none;
 }
-/* #endregion */
+/* endregion */
 
+/* region Footer */
 footer {
     bottom: 0;
+    background: var(--color-surface-sunken);
+    border-top: 1px solid rgb(var(--color-border-muted-rgb));
+    padding: 1.225rem 1.5rem;
 }
+
+footer span:first-child {
+    color: var(--color-text-secondary);
+}
+
+footer span:last-child {
+    color: var(--color-text-muted);
+}
+
+footer span:last-child a {
+    color: var(--color-brand);
+}
+/* endregion */
 
 @media (max-width: 576px) {
     header nav .navbar-collapse .nav-item {

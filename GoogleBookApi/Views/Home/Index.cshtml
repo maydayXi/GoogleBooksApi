@@ -10,19 +10,41 @@
 }
 
 <section id="banner">
-    <div class="row gx-2">
-        <div class="col-md-4 align-middle align-self-center text-end">
-            <h1 class="text-end fw-bolder mb-3">
-                搜詢 Google Books <br />
-                <span class="text-muted fs-5">查詢書籍 ISBN、作者、出版社資料</span>
+    <div class="row align-items-center gx-4">
+        <div class="col-md-6">
+            <h1 class="fw-bold">
+                搜詢 Google Books <br/>
+                <span>書籍資料庫</span>
             </h1>
-            <a href="@Url.Action(nameof(HomeController.Guideline))" class="btn shadow-sm btn-outline-danger">
-                See more
-                <i class="bi bi-arrow-right"></i>
-            </a>
+            <p>
+                查詢書籍 ISBN、作者、出版社等詳細資。支援 ISBN-10、ISBN-13 及書名搜尋，快速取得 Google Books 書籍資訊。
+            </p>
+            <div class="btn-row d-flex flex-wrap">
+                <a href="@Url.ActionLink(nameof(HomeController.Guideline))" class="btn btn-guideline text-white">
+                    使用說明
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+                <a href="@Url.ActionLink(nameof(HomeController.BookSearch))" class="btn btn-start">
+                    開始搜尋
+                </a>
+            </div>
+            <div class="stats d-flex flex-wrap">
+                <div>
+                    <div class="fw-bold">ISBN-10 / 13</div>
+                    <div class="mt-2">支援格式</div>
+                </div>
+                <div>
+                    <div class="fw-bold">分頁顯示</div>
+                    <div class="mt-2">書名搜尋</div>
+                </div>
+                <div>
+                    <div class="fw-bold">JSON 格式</div>
+                    <div class="mt-2">REST API</div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-8 text-center">
-            <img src="~/image/banner.svg" class="img-fluid w-50" alt="Banner Image" />
+        <div class="banner-img col-md-6 text-center">
+            <img src="~/image/banner.svg" class="img-fluid my-0 mx-auto w-100" alt="Banner Image"/>
         </div>
     </div>
 </section>

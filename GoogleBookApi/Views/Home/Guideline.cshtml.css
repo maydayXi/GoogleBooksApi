@@ -1,16 +1,44 @@
-﻿.card {
-    isolation: isolate;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
-    transition: all 250ms cubic-bezier(0.4, 0.0, 0.2, 1);
-    background: #e3ddd9;
-    backdrop-filter: blur(16px);
+﻿#guideline {
+    padding: var(--section-padding);
 }
 
-.card-title {
-    color: #954126;
+#guideline .d-flex {
+    gap: 1.225rem;
 }
 
-.card-text {
-    color: #4a2013;
-    font-size: 1.1rem;
+#guideline .guideline-card {
+    background: var(--color-surface-card);
+    -webkit-border-radius: .875rem;
+    border-radius: .875rem;
+    padding: 1.375rem 1.5rem;
+    border-width: 1px 1px 1px 4px;
+    border-style: solid;
+    box-shadow: rgba(var(--color-box-shadow-secondary-rgba)) 0 2px 8px;
+    border-color: rgb(var(--color-border-primary-rgb)) rgb(var(--color-border-primary-rgb)) 
+        rgb(var(--color-border-primary-rgb)) rgb(var(--color-brand-rgb));
+    gap: 1.225rem;
+}
+
+#guideline .guideline-card .card-icon {
+    width: 2.675rem;
+    height: 2.675rem;
+    -webkit-border-radius: .625rem;
+    border-radius: .625rem;
+    background: var(--color-surface);
+    color: var(--color-brand);
+    font-size: 1.25rem;
+}
+
+#guideline .guideline-card .card-description h5 {
+    color: var(--color-text-primary);
+    font-family: "Noto Serif TC", Georgia, serif;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+}
+
+#guideline .guideline-card .card-description p {
+    font-size: .875rem;
+    line-height: 1.78;
+    color: var(--color-text-secondary);
 }

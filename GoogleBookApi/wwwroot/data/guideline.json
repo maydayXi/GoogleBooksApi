@@ -1,22 +1,17 @@
 [
     {
-        "icon": "bi bi-google",
-        "title": "資料來源",
-        "description": "使用 Google Books API 作為資料來源，提供書籍資訊的查詢功能。"
-    },
-    {
-        "icon": "bi bi-info-square",
-        "title": "顯示資料",
-        "description": "書籍封面、書名、作者、出版社、書籍簡介、出版日期、ISBN-10、ISBN-13"
-    },
-    {
         "icon": "bi bi-upc",
-        "title": "查詢功能",
-        "description": "在搜尋欄位中輸入書籍的 ISBN 或標題，系統會依據輸入的 ISBN 查詢對應的書籍資料。"
+        "title": "ISBN 查詢",
+        "description": "支援 ISBN-10 及 ISBN-13 格式，輸入完整書籍 ISBN 編號，可快速查詢書籍的詳細資料，包含封面、作者、出版社、描述等完整資訊。"
     },
     {
-        "icon": "bi bi-exclamation-lg",
-        "title": "查無資料",
-        "description": "ISBN 輸入錯誤，或資料源沒有提供書籍資料"
+        "icon": "bi bi-search",
+        "title": "書名搜尋",
+        "description": "輸入書名關鍵字進行搜尋、系統會列出相關書籍清單，提供分頁功能，每頁可顯示 10、20 本書籍。"
+    },
+    {
+        "icon": "bi bi-grid-3x3-gap",
+        "title": "搜尋結果",
+        "description": "以書卡方式呈現，每張書卡包含書名、作者、出版社、ISBN、出版日期及簡介。"
     }
 ]

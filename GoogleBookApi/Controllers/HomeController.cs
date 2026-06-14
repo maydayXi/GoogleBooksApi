@@ -157,7 +157,7 @@ public class HomeController(IGoogleBookService googleBookService, IJsonDataProvi
     public IActionResult Version()
     {
         var versions = _versionDataProvider.GetListDataFromJson(WebHelper.VersionJsonFilePath);
-        return View(versions);
+        return View(versions.Take(4));
     }
 
 

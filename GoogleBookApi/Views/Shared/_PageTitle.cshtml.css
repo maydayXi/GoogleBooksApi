@@ -1,0 +1,15 @@
+.page-title {
+    margin-bottom: 2rem;
+}
+
+.page-title h2 {
+    font-family: "Noto Serif TC", Georgia, serif;
+    font-size: 1.725rem;
+    margin-bottom: .675rem;
+    color: var(--color-text-primary);
+}
+
+.page-title p {
+    color: var(--color-text-muted);
+    font-size: .875rem;
+}
