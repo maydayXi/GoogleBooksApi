@@ -63,6 +63,8 @@ The available fields may vary depending on the data returned by Google Books API
 
 style: redesign UI across all pages.
 
+Release date: 2026-06-14
+
 ### 1.5.0
 
 feat: enhance SEO metadata and site discoverability
