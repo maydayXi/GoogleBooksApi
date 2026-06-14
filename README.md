@@ -17,6 +17,26 @@ A book search web app built with ASP.NET Core MVC and Google Books API
 - JavaScript 
 - Google Books API
 
+## Screenshot
+
+### Index
+
+![img.png](img.png)
+
+### Guideline
+
+![img_1.png](img_1.png)
+
+### Version
+
+![img_2.png](img_2.png)
+
+### Search
+
+![img_3.png](img_3.png)
+
+![img_4.png](img_4.png)
+
 ## API Endpoint 
 
 Search book by ISBN
@@ -38,6 +58,10 @@ Book metadata is provided by [Google Books API](https://developers.google.com/bo
 The available fields may vary depending on the data returned by Google Books API. Some books may not include complete metadata or cover images.
 
 ## Version 
+
+### 1.6.0 
+
+style: redesign UI across all pages.
 
 ### 1.5.0
 
