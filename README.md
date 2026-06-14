@@ -59,6 +59,12 @@ The available fields may vary depending on the data returned by Google Books API
 
 ## Version 
 
+### 1.7.0
+
+feature(search): show context-aware placeholder based on active search type.
+
+Release date: 2026-06-15
+
 ### 1.6.1
 
 fix(search): resolve ISBN search returning not found(404) results.

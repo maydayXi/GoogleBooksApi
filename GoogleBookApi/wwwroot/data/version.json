@@ -1,5 +1,10 @@
 [
     {
+        "version": "1.7.0",
+        "description": "feature(search): show context-aware placeholder based on active search type.",
+        "releasedDate": "2026-06-15"
+    },
+    {
         "version": "1.6.1",
         "description": "fix(search): resolve ISBN search returning not found(404) results.",
         "releasedDate": "2026-06-15"

@@ -118,6 +118,14 @@ export class UiService {
     }
 
     /**
+     * Update the placeholder text of the search input field.
+     * @param {string} placeholder - The placeholder text to display.
+     */
+    updateSearchInputPlaceholder(placeholder = "請輸入 ISBN-10 或 ISBN-13") {
+        this.searchInput.placeholder = placeholder;
+    }
+
+    /**
      * Shows or hides the page-size control depending on the active search type.
      * The page-size selector is only relevant for title search, not ISBN.
      * @param {boolean} visible - Pass `true` to show the control, `false` to hide it.

@@ -9,6 +9,15 @@ import { alertValidationError, alertError } from "../util/alert.js";
 const DEFAULT_ERROR_MESSAGE = "An unexpected error occurred.";
 
 /**
+ * Placeholder texts for different search types.
+ * @type {Map<string, string>}
+ */
+const placeholders = {
+    "isbn": "請輸入 ISBN-10 或 ISBN-13",
+    "title": "請輸入書名"
+};
+
+/**
  * Represents the search criteria used to fetch paginated book results.
  * Stored after a successful search so pagination can reuse the same query.
  * @typedef {Object} Criteria
@@ -51,9 +60,10 @@ export class SearchController {
     handleDropdownClick = e => {
         const btn = e.currentTarget;
         const key = (btn.dataset.searchBy ?? "isbn").toLowerCase();
-
+        
         this._currentStrategyKey = key;
         this._ui.updateSearchByButton(btn);
+        this._ui.updateSearchInputPlaceholder(placeholders[key]);
         this._ui.setPageSizeVisible(key !== "isbn");
     };
 

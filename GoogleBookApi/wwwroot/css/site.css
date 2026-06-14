@@ -114,6 +114,10 @@ header nav .navbar-collapse .navbar-nav {
 }
 
 /* region Book search */
+#book-search > .search-bar > .d-flex > .input-group > .dropdown-menu.show > li > .dropdown-item {
+    color: var(--color-text-secondary);
+}
+
 #book-search > .search-bar > .d-flex > .input-group > .dropdown-menu.show > li > .dropdown-item:hover {
     background: var(--color-surface);
     color: var(--color-brand);
